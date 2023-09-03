@@ -1,5 +1,4 @@
 .DS_Store
-.pdm-python
 .venv/**
 /src/pizza.egg-info/**/*
-pdm.lock
+.pdm-python
