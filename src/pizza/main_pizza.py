@@ -20,11 +20,15 @@ class PizzaRecipe:
 
     def __init__(self, size="L"):
         self.size = size
-        self.name = self.__class__.__name__
 
     @classmethod
     @property
-    def clean_recipe(cls):
+    def name(cls):
+        return cls.__class__.__name__.capitalize()
+
+    @classmethod
+    @property
+    def clean_recipe(cls) -> str:
         return ", ".join([i for i in cls.recipe])
 
     def __str__(self) -> str:
@@ -109,8 +113,7 @@ class Hawaiian(PizzaRecipe):
 # for k, v in assortment.items():
 #     menu_str += f"- {k} {v.emoji} : {v.clean_recipe}\n"
 menu_str = "\n".join(
-    f"- {k.capitalize()} {v.emoji} : {v.clean_recipe}"
-    for k, v in assortment.items()
+    f"- {v.name} {v.emoji} : {v.clean_recipe}" for v in assortment.values()
 )
 
 
