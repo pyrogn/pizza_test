@@ -2,3 +2,4 @@
 .venv/**
 /src/pizza.egg-info/**/*
 .pdm-python
+/**/.idea/*
