@@ -23,25 +23,49 @@ class PizzaRecipe:
         print(self.recipe)
 
 
+assortment = {}
+
+
+def pizza_to_assortment(cls):
+    assortment[cls.__name__] = cls.recipe
+    return cls
+
+
+@pizza_to_assortment
 class Margherita(PizzaRecipe):
-    recipe = {"tomato sauce", 'mozzarella', 'tomatoes'}
+    recipe = ["tomato sauce", 'mozzarella', 'tomatoes']
 
 
+@pizza_to_assortment
 class Pepperoni(PizzaRecipe):
-    pass
+    recipe = ["tomato sauce", "mozzarella", "pepperoni"]
 
 
+@pizza_to_assortment
 class Hawaiian(PizzaRecipe):
-    pass
+    recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
 
 
 @cli.command()
-@click.option(' =delivery', default=False, is_flag=True)
+def menu():
+    for k, v in assortment.items():
+        print(f"- {k} 🧀: {', '.join([i for i in v])}")
+
+
+@cli.command()
+@click.option('--delivery', default=False, is_flag=True)
 @click.argument('pizza', nargs=1)
 def order(pizza: str, delivery: bool):
     print('i want to order', pizza)
 
 
+def bake(pizza):
+    print('baked')
+
+
+def deliver(pizza):
+    pass
+
+
 if __name__ == '__main__':
-    p1 = Margherita()
-    p1.dict()
+    cli()
