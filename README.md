@@ -5,3 +5,5 @@
 * [ ] Get familiar with PDM and pyproject.toml
 * [ ] Add emoji to every action
 * [ ] Think how to make proper OO relations
+* [ ] Add tests
+* [ ] Reformat code into modules
