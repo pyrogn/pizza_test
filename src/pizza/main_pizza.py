@@ -16,21 +16,24 @@ def cli():
 class PizzaRecipe:
     # size: str
     recipe: dict
+    emoji: str
 
-    def __init__(self, size='L'):
+    def __init__(self, size="L"):
         self.size = size
         self.name = self.__class__.__name__
 
     @classmethod
     @property
     def clean_recipe(cls):
-        return ', '.join([i for i in cls.recipe])
+        return ", ".join([i for i in cls.recipe])
 
     def __str__(self) -> str:
         return self.__class__.__name__
 
     def __eq__(self, other: Self) -> bool:
-        return (set(self.recipe) == set(other.recipe)) & (self.name == other.name)
+        return (set(self.recipe) == set(other.recipe)) & (
+            self.name == other.name
+        )
 
     def dict(self):
         print(self.recipe)
@@ -73,7 +76,6 @@ class CustomDict(UserDict):
         return super().__setitem__(key.lower(), value)
 
     def __contains__(self, item: str):
-        # think how to make it work
         return super().__contains__(item.lower())
 
 
@@ -87,22 +89,29 @@ def pizza_to_assortment(cls):
 
 @pizza_to_assortment
 class Margherita(PizzaRecipe):
-    recipe = ["tomato sauce", 'mozzarella', 'tomatoes']
+    recipe = ["tomato sauce", "mozzarella", "tomatoes"]
+    emoji = "🧀"
 
 
 @pizza_to_assortment
 class Pepperoni(PizzaRecipe):
     recipe = ["tomato sauce", "mozzarella", "pepperoni"]
+    emoji = "🍕"
 
 
 @pizza_to_assortment
 class Hawaiian(PizzaRecipe):
     recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
+    emoji = "🍍"
 
 
-menu_str = ""
-for k, v in assortment.items():
-    menu_str += f"- {k} 🧀: {v.clean_recipe}\n"
+# menu_str = ""
+# for k, v in assortment.items():
+#     menu_str += f"- {k} {v.emoji} : {v.clean_recipe}\n"
+menu_str = "\n".join(
+    f"- {k.capitalize()} {v.emoji} : {v.clean_recipe}"
+    for k, v in assortment.items()
+)
 
 
 @cli.command()
@@ -110,16 +119,26 @@ def menu():
     print(menu_str)
 
 
+class EmojiSelector:
+    # select emoji by name from list
+    def __init__(self):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        pass
+
+
 @cli.command()
-@click.option('--delivery', default=False, is_flag=True)
-@click.argument('pizza', nargs=1)
+@click.option("--delivery", default=False, is_flag=True)
+@click.argument("pizza", nargs=1)
 def order(pizza: str, delivery: bool):
-    print('i want to order', pizza)
+    pizza = pizza.capitalize()
     if pizza not in assortment:
         print("No such pizza in the assortment, here's the menu:")
         print(menu_str)
         sys.exit()
     ordered_pizza = assortment[pizza]()
+    print("I want to order", pizza, ordered_pizza.emoji)
     bake(ordered_pizza)
     if delivery:
         deliver(ordered_pizza)
@@ -130,22 +149,22 @@ def order(pizza: str, delivery: bool):
 @log("Picking up took {:.2f} seconds")
 @add_latency
 def pick_up(pizza):
-    print('picked up')
+    print("🏎️ picked up ", end="")
 
 
 @log("Cooking took {:.2f} seconds")
 @add_latency
 def bake(pizza):
-    print('baked')
+    print("👩‍🍳baked ", end="")
 
 
 @log("Delivery took {:.2f} seconds")
 @add_latency
 def deliver(pizza):
-    print('delivered')
+    print("🛵 delivered ", end="")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # cli()
     a = Pepperoni()
     print(a)
