@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+src/pizza/__init__.py
+src/pizza.egg-info/PKG-INFO
+src/pizza.egg-info/SOURCES.txt
+src/pizza.egg-info/dependency_links.txt
+src/pizza.egg-info/requires.txt
+src/pizza.egg-info/top_level.txt

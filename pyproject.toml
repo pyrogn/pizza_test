@@ -1,0 +1,20 @@
+[project]
+name = "pizza"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Pavel", email = "60060559+pyrogn@users.noreply.github.com"},
+]
+dependencies = [
+    "click>=8.1.7",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pdm.dev-dependencies]
+dev = []
