@@ -3,3 +3,4 @@
 /src/pizza.egg-info/**/*
 .pdm-python
 /**/.idea/*
+./src/pizza.egg-info/**/*
