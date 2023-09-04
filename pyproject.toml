@@ -19,7 +19,8 @@ pizza = "pizza:cli"
 requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.pdm.dev-dependencies]
+#[tool.pdm.dev-dependencies]
+[project.optional-dependencies]
 dev = [
     "black>=23.7.0",
     "isort>=5.12.0",
