@@ -9,8 +9,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - run: python -m venv .venv
-      - run: . .venv/bin/activate
       - name: Installation dependencies
-        run: pip install pdm && pdm install
+#        run: pip install pdm && pdm install
+        run: python -m pip install -e .[dev]
+      - run: whereis python
+      - run: whereis pip
+      - run: python -m pip list
       - run: python -m pytest
