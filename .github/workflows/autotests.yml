@@ -11,4 +11,4 @@ jobs:
           python-version: '3.11'
       - name: Installation dependencies
         run: pip install pdm && pdm install
-      - run: pytest
+      - run: python -m pytest
