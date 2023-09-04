@@ -1,5 +1,15 @@
 # pizza
 
+## Example
+There is should be a gif
+
+## How to install
+1. `git clone <link>`
+2. `cd pizza`
+3. `virtualenv .venv`
+4. `. .venv/bin/activate`
+5. `python -m pip install -e .` or for development `python -m pip install -e .[dev]`
+
 ## TODO
 * [x] Add pre-commit hooks for pytest and black,isort
 * [ ] Get familiar with PDM and pyproject.toml
