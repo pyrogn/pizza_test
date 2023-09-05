@@ -146,6 +146,7 @@ class DictAssortment(UserDict):
         return super().__contains__(item.lower())
 
 
+# move it to different module maybe
 assortment = DictAssortment()
 
 

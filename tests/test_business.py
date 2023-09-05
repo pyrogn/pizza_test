@@ -44,6 +44,7 @@ def test_pizza_order(is_delivery):
     client2 = m.Client(name="PP2", is_delivery=False, restaurant=restaurant)
     client1.order("Pepperoni")
     client2.order("Pepperoni")
+    assert client1 != client2
     assert len(restaurant.stock) == 0
     assert len(client1.stock) == 1
     assert len(client2.stock) == 1

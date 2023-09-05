@@ -16,6 +16,9 @@ There is should be a gif
 * [x] Add pre-commit hooks for pytest and black,isort
 * [x] Get familiar with PDM and pyproject.toml
 * [ ] Add emoji to every action
-* [ ] Think how to make proper OO relations
-* [ ] Add tests
-* [ ] Reformat code into modules
+* [x] Think how to make proper OO relations
+* [x] Add tests
+* [x] Reformat code into modules
+* [ ] Add comments
+* [ ] Make it tidy
+* [ ] Add async progressbar
