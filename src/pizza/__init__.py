@@ -1,1 +1,1 @@
-from .main_pizza import cli
+from .cli import cli
