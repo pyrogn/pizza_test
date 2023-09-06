@@ -11,7 +11,7 @@ from pizza.pizza_menu import pizza_menu, Pepperoni
 
 LATENCY_ENABLED = os.getenv(
     "LATENCY_ENABLED", "0"
-)  # this env is set up in cli module only
+)  # if 1 - latency added (cli), if 0 - no latency (everything else)
 
 
 def add_latency(fn):
@@ -35,7 +35,7 @@ def add_latency(fn):
 
 
 def log(str_template: str):
-    """Log and print time spent in this function call"""
+    """Log and print time spent in the function call"""
 
     def outer_wrapper(fn):
         @functools.wraps(fn)
@@ -101,7 +101,7 @@ class Restaurant:
             self.deliver(client)
 
     @log("Delivery took {:.2f} seconds")
-    @add_spinner("Delivering", "🛵 Delivered")
+    @add_spinner("Delivering", "🚲 Delivered")
     @add_latency
     def deliver(self, client: "Client") -> None:
         client.add_to_stock(self._retrieve_from_stock(client))

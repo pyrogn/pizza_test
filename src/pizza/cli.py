@@ -17,6 +17,7 @@ def cli():
 
 @cli.command()
 def menu():
+    """Print available food"""
     print(full_menu_str)
 
 
@@ -25,7 +26,7 @@ def menu():
 @click.argument("pizza", nargs=1)
 def order(pizza: str, delivery: bool):
     """Create a restaurant
-    Create a client that linked to this restaurant and has delivery flag"""
+    Create a client who is linked to this restaurant and has delivery flag"""
     restaurant = Restaurant(pizza_menu)
     client = Client(restaurant=restaurant, is_delivery=delivery)
 
