@@ -4,12 +4,12 @@ import time
 import random
 import os
 from pizza.spinner import add_spinner
-from pizza.pizza_menu import DictAssortment, FoodItem, PizzaRecipe
-from pizza.pizza_menu import assortment, Pepperoni
+from pizza.pizza_menu import UnifiedMenu, FoodItem, Pizza
+from pizza.pizza_menu import pizza_menu, Pepperoni
 
 LATENCY_ENABLED = os.getenv(
     "LATENCY_ENABLED", "0"
-)  # latency added only for cli app
+)  # this env is set up in cli module only
 
 
 def add_latency(fn):
@@ -47,14 +47,14 @@ def log(str_template: str):
 
 
 class Restaurant:
-    def __init__(self, menu: "DictAssortment") -> None:
+    def __init__(self, menu: "UnifiedMenu") -> None:
         self.menu = menu
         self._stock: defaultdict = defaultdict(list)
 
     @log("Baking took {:.2f} seconds")
     @add_spinner("Baking", "👩‍🍳 Baked")
     @add_latency
-    def bake(self, pizza: PizzaRecipe) -> PizzaRecipe:
+    def bake(self, pizza: Pizza) -> Pizza:
         if not pizza.is_baked:
             # print("👩‍🍳 baked", end=" ")
             pizza.is_baked = True
@@ -128,7 +128,7 @@ class Client:
 
 
 if __name__ == "__main__":
-    restaurant = Restaurant(assortment)
+    restaurant = Restaurant(pizza_menu)
     a = Pepperoni()
     client = Client(restaurant=restaurant, is_delivery=False)
     client.order("Pepperoni")
