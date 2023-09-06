@@ -12,8 +12,8 @@ https://github.com/pyrogn/pizza_test/assets/60060559/f889dad5-a3fa-46f8-98d0-bb4
 2. `cd pizza`
 3. `virtualenv .venv`
 4. `. .venv/bin/activate`
-5. `pre-commit install`
-6. `python -m pip install .` or for development `pdm install -d`
+5. `python -m pip install .` or for development `pdm install -d`
+6. `pre-commit install` (development)
 
 ## TODO
 * [x] Add pre-commit hooks for pytest and black,isort

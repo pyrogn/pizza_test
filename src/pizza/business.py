@@ -6,7 +6,7 @@ import time
 import random
 import os
 from pizza.spinner import add_spinner
-from pizza.pizza_menu import UnifiedMenu, FoodItem, Pizza
+from pizza.pizza_menu import ResilientMenu, FoodItem, Pizza
 from pizza.pizza_menu import pizza_menu, Pepperoni
 
 LATENCY_ENABLED = os.getenv(
@@ -64,7 +64,7 @@ class Restaurant:
         deliver: deliver baked food from a restaurant's stock to a customer's stock
     """
 
-    def __init__(self, menu: "UnifiedMenu") -> None:
+    def __init__(self, menu: "ResilientMenu") -> None:
         """menu: available food to clients
         _stock: stock of the restaurant with food waiting for pickup, where key - Client, value - list of FoodItem
         """
