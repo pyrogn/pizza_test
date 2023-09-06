@@ -12,8 +12,10 @@ jobs:
       - name: Installation dependencies
         run: python -m pip install .
       - run: python -m pip install pytest mypy
-#      - run: python -m pip list
+      - run: python -m pip list
+      - run: pwd
+      - run: ls -al
       - name: Running tests
         run: python -m pytest
       - name: Type checks
-        run: mypy .
+        run: mypy pizza
