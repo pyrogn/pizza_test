@@ -1,6 +1,6 @@
 # pizza
 
-<img src="./tom.png" width="228"/>
+<img src="./tom.png" width="230"/>
 
 ## Example
 There is should be a gif
@@ -10,15 +10,17 @@ There is should be a gif
 2. `cd pizza`
 3. `virtualenv .venv`
 4. `. .venv/bin/activate`
-5. `python -m pip install -e .` or for development `python -m pip install -e .[dev]`
+5. `python -m pip install .` or for development `pdm install -d`
 
 ## TODO
 * [x] Add pre-commit hooks for pytest and black,isort
+* [x] Add pytest checks to GitHub Actions
 * [x] Get familiar with PDM and pyproject.toml
-* [ ] Add emoji to every action
-* [x] Think how to make proper OO relations
-* [x] Add tests
+* [x] Think how to make better OO relations
+* [x] Add tests (parameters, fixtures?)
 * [x] Reformat code into modules
+* [ ] Add emoji to every action
+* [ ] Add delay and good stdout to cli commands
 * [ ] Add comments
 * [ ] Make it tidy
-* [ ] Add async progressbar
+* [ ] Add async cycle bar
