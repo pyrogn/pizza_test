@@ -13,12 +13,15 @@ LATENCY_ENABLED = os.getenv(
 
 
 def add_latency(fn):
-    @functools.wraps(fn)  # not sure if it works with class methods
+    @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
-        # global LATENCY_ENABLED
         time_sleep = 0
         if LATENCY_ENABLED == "1":
-            time_sleep = random.randint(1000, 30000) / 20000
+            multiply = 1000
+            # imitate uniform distribution without numpy
+            time_sleep = random.randint(1 * multiply, 30 * multiply) / (
+                20 * multiply
+            )
         time.sleep(time_sleep)
         result = fn(self, *args, **kwargs)
         return result
@@ -33,7 +36,9 @@ def log(str_template: str):
             time_start = time.time()
             result = fn(self, *args, **kwargs)
             lapsed_time = time.time() - time_start
-            print(str_template.format(lapsed_time))  # apply to placeholder
+            print(
+                str_template.format(lapsed_time)
+            )  # put time into placeholder
             return result
 
         return wrapper
@@ -44,7 +49,7 @@ def log(str_template: str):
 class Restaurant:
     def __init__(self, menu: "DictAssortment") -> None:
         self.menu = menu
-        self._stock = defaultdict(list)
+        self._stock: defaultdict = defaultdict(list)
 
     @log("Baking took {:.2f} seconds")
     @add_spinner("Baking", "👩‍🍳 Baked")
@@ -96,7 +101,7 @@ class Client:
         self.phone_number = phone_number
         self.restaurant = restaurant
         self.is_delivery = is_delivery
-        self.stock = []
+        self.stock: list[FoodItem] = []
 
     def __hash__(self):
         """Uniquely identify a client"""
@@ -118,7 +123,6 @@ class Client:
     @add_spinner("Picking up", "🏎️  Picked up")
     @add_latency
     def _pickup(self):
-        # print("🏎️  Picking up", end=" ")
         food = self.restaurant.pickup(self)
         return food
 
@@ -130,4 +134,3 @@ if __name__ == "__main__":
     client.order("Pepperoni")
     client.order("Pepperoni")
     print(client.stock)
-    # print(a)

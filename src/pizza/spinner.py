@@ -10,16 +10,14 @@ def spin(start_msg: str, end_msg: str, done: Event):
         print(status, end="", flush=True)
         if done.wait(0.1):
             break
-    blanks = " " * len(status)
     print(f"\r{end_msg}! ", end="")
-    # print(f"\r{blanks}\r", end="")
 
 
 def add_spinner(start_msg, end_msg):
-    def outer(fn):
+    def outer_wrapper(fn):
         functools.wraps(fn)
 
-        def wrapper(self, *args, **kwargs) -> int:
+        def inner_wrapper(self, *args, **kwargs) -> int:
             done = Event()
             spinner = Thread(target=spin, args=(start_msg, end_msg, done))
             spinner.start()
@@ -28,9 +26,9 @@ def add_spinner(start_msg, end_msg):
             spinner.join()
             return result
 
-        return wrapper
+        return inner_wrapper
 
-    return outer
+    return outer_wrapper
 
 
 # def main(slow_func, *args) -> None:

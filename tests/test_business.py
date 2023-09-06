@@ -47,7 +47,7 @@ def test_different_pizza(pizza_class):
 
 
 @pytest.mark.parametrize("is_delivery", [True, False])
-def test_pizza_order(is_delivery):
+def test_pizza_order_diff_clients(is_delivery):
     """Test that pizza is picked up and delivered to a client who ordered
     Side note: checks aren't meaningful because orders are blocking sequential
     """

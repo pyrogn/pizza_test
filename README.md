@@ -19,8 +19,8 @@ There is should be a gif
 * [x] Think how to make better OO relations
 * [x] Add tests (parameters, fixtures?)
 * [x] Reformat code into modules
-* [ ] Add emoji to every action
-* [ ] Add delay and good stdout to cli commands
+* [x] Add emoji to every action (static at the moment)
+* [x] Add delay and good stdout to cli commands
 * [ ] Add comments
 * [ ] Make it tidy
-* [ ] Add async cycle bar
+* [x] Add async cycle bar
