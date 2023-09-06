@@ -12,6 +12,8 @@ import click
 
 @click.group()
 def cli():
+    """Look at the menu and order your favourite pizzas\n
+    Deliver or pick up - you choose!"""
     pass
 
 
@@ -31,7 +33,7 @@ def order(pizza: str, delivery: bool):
     client = Client(restaurant=restaurant, is_delivery=delivery)
 
     if pizza not in pizza_menu:
-        print("No such pizza in the assortment, here's the menu:")
+        print("No such pizza on the menu, the available pizzas:")
         print(full_menu_str)
         sys.exit()
 

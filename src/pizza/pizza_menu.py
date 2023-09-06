@@ -3,7 +3,7 @@ from collections import UserDict
 from typing import Union
 
 
-class UnifiedMenu(UserDict):
+class ResilientMenu(UserDict):
     """Dictionary that is indifferent of registry of the key
     It makes lower every key"""
 
@@ -20,7 +20,7 @@ class UnifiedMenu(UserDict):
         return super().__contains__(item.lower())
 
 
-pizza_menu = UnifiedMenu()
+pizza_menu = ResilientMenu()
 
 
 def pizza_to_assortment(cls):
