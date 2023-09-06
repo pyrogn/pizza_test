@@ -29,7 +29,3 @@ def add_spinner(start_msg, end_msg):
         return inner_wrapper
 
     return outer_wrapper
-
-
-# def main(slow_func, *args) -> None:
-#     result = supervisor(slow_func, *args)
