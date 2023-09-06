@@ -4,6 +4,8 @@
 
 ## Example
 
+https://github.com/pyrogn/pizza_test/assets/60060559/f889dad5-a3fa-46f8-98d0-bb49113dccc4
+
 
 ## How to install
 1. `git clone <link>`
