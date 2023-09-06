@@ -1,33 +1,6 @@
 """Generating a restaurant's menu and classes of Pizza"""
 from collections import UserDict
-from typing import Union
-
-
-class ResilientMenu(UserDict):
-    """Dictionary that is indifferent of registry of the key
-    It makes lower every key"""
-
-    def __init__(self):
-        super().__init__()
-
-    def __getitem__(self, item: str):
-        return super().__getitem__(item.lower())
-
-    def __setitem__(self, key: str, value):
-        return super().__setitem__(key.lower(), value)
-
-    def __contains__(self, item: str):  # type: ignore
-        return super().__contains__(item.lower())
-
-
-pizza_menu = ResilientMenu()
-
-
-def pizza_to_assortment(cls):
-    """Add pizza to a dict after every definition
-    Alternative - using Pizza.__subclasses__()"""
-    pizza_menu[cls.get_name()] = cls
-    return cls
+from typing import Union, TypeVar, Type
 
 
 class FoodItem:
@@ -99,6 +72,35 @@ class Pizza(FoodItem):
 
     def dict(self):
         return self.recipe
+
+
+class ResilientMenu(UserDict):
+    """Dictionary that is indifferent of registry of the key
+    It makes lower every key"""
+
+    def __init__(self):
+        super().__init__()
+
+    def __getitem__(self, item: str):
+        return super().__getitem__(item.lower())
+
+    def __setitem__(self, key: str, value):
+        return super().__setitem__(key.lower(), value)
+
+    def __contains__(self, item: str):  # type: ignore
+        return super().__contains__(item.lower())
+
+
+pizza_menu = ResilientMenu()
+
+P = TypeVar("P", bound=Pizza)
+
+
+def pizza_to_assortment(cls: Type[P]) -> Type[P]:
+    """Add pizza to a dict after every definition
+    Alternative - using Pizza.__subclasses__()"""
+    pizza_menu[cls.get_name()] = cls
+    return cls
 
 
 @pizza_to_assortment
