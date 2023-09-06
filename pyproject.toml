@@ -13,7 +13,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-pizza = "pizza:cli"
+pizza = "pizza.cli:cli"
 
 [build-system]
 requires = ["setuptools>=61", "wheel"]
