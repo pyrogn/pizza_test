@@ -17,4 +17,4 @@ jobs:
       - name: Running tests
         run: python -m pytest
       - name: Type checks
-        run: mypy . --exclude ./build
+        run: mypy ./src ./tests
