@@ -21,7 +21,7 @@ assortment = DictAssortment()
 
 
 def pizza_to_assortment(cls):
-    assortment[cls.__name__] = cls
+    assortment[cls.name] = cls
     return cls
 
 
@@ -31,6 +31,7 @@ class FoodItem:
     recipe: dict
     emoji: str
     type_of_food: str
+    _name: [str, None] = None
 
 
 class PizzaRecipe(FoodItem):
@@ -50,7 +51,9 @@ class PizzaRecipe(FoodItem):
     @classmethod
     @property
     def name(cls) -> str:
-        return cls.__mro__[0].__name__.capitalize()
+        if not cls._name:
+            return cls.__mro__[0].__name__.title()
+        return cls._name.title()
 
     @classmethod
     @property
@@ -94,6 +97,7 @@ class Pepperoni(PizzaRecipe):
 class Hawaiian(PizzaRecipe):
     recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
     emoji = "🍍"
+    _name = "Hawaiian Special"
 
 
 menu_str = "\n".join(
