@@ -1,11 +1,10 @@
 import sys
 import os
-import asyncio
 
 os.environ["LATENCY_ENABLED"] = "1"  # only in cli mode enable latency
 from pizza.pizza_menu import assortment, menu_str
 from pizza.business import Restaurant, Client
-import click  # but Typer is a bit cleaner
+import click
 
 
 @click.group()

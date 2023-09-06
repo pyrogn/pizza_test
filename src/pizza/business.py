@@ -3,8 +3,8 @@ import functools
 import time
 import random
 import os
+from pizza.spinner import add_spinner
 from pizza.pizza_menu import DictAssortment, FoodItem, PizzaRecipe
-
 from pizza.pizza_menu import assortment, Pepperoni
 
 LATENCY_ENABLED = os.getenv(
@@ -18,7 +18,7 @@ def add_latency(fn):
         # global LATENCY_ENABLED
         time_sleep = 0
         if LATENCY_ENABLED == "1":
-            time_sleep = random.randint(1, 3) / 5
+            time_sleep = random.randint(1000, 30000) / 20000
         time.sleep(time_sleep)
         result = fn(self, *args, **kwargs)
         return result
@@ -47,10 +47,11 @@ class Restaurant:
         self._stock = defaultdict(list)
 
     @log("Baking took {:.2f} seconds")
+    @add_spinner("Baking", "👩‍🍳 Baked")
     @add_latency
     def bake(self, pizza: PizzaRecipe) -> PizzaRecipe:
         if not pizza.is_baked:
-            print("👩‍🍳 baked", end=" ")
+            # print("👩‍🍳 baked", end=" ")
             pizza.is_baked = True
         return pizza
 
@@ -76,10 +77,10 @@ class Restaurant:
             self.deliver(client)
 
     @log("Delivery took {:.2f} seconds")
+    @add_spinner("Delivering", "🛵 Delivered")
     @add_latency
     def deliver(self, client: "Client") -> None:
-        # do some work with timer
-        print("🛵 delivered", end=" ")
+        # print("🛵 delivered", end=" ")
         client.add_to_stock(self._retrieve_from_stock(client))
 
 
@@ -114,9 +115,10 @@ class Client:
             self.add_to_stock(food)
 
     @log("Picking up took {:.2f} seconds")
+    @add_spinner("Picking up", "🏎️  Picked up")
     @add_latency
     def _pickup(self):
-        print("🏎️  Picking up", end=" ")
+        # print("🏎️  Picking up", end=" ")
         food = self.restaurant.pickup(self)
         return food
 
