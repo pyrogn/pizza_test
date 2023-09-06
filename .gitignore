@@ -4,3 +4,4 @@
 .pdm-python
 /**/.idea/*
 ./src/pizza.egg-info/**/*
+**/__pycache__/**/*
