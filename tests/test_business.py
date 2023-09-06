@@ -19,7 +19,7 @@ def test_pizza_equality(pizza_class):
 
 @pytest.mark.parametrize("is_delivery", [True, False])
 def test_pizza_order(is_delivery):
-    restaurant = m.Restaurant(pizza.pizza_menu.assortment)
+    restaurant = m.Restaurant(pizza.pizza_menu.pizza_menu)
     client = m.Client(is_delivery=is_delivery, restaurant=restaurant)
     client.order("Pepperoni")
     client.order("Pepperoni")
@@ -51,7 +51,7 @@ def test_pizza_order_diff_clients(is_delivery):
     """Test that pizza is picked up and delivered to a client who ordered
     Side note: checks aren't meaningful because orders are blocking sequential
     """
-    restaurant = m.Restaurant(pizza.pizza_menu.assortment)
+    restaurant = m.Restaurant(pizza.pizza_menu.pizza_menu)
     client1 = m.Client(name="PP1", is_delivery=True, restaurant=restaurant)
     client2 = m.Client(name="PP2", is_delivery=False, restaurant=restaurant)
     client1.order("Pepperoni")
