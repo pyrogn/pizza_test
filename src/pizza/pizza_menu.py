@@ -45,6 +45,7 @@ class FoodItem:
     alt_name: Union[
         str, None
     ] = None  # make an option for _name != __class__.__name__
+    is_baked: bool = False
 
 
 class Pizza(FoodItem):
@@ -60,7 +61,6 @@ class Pizza(FoodItem):
 
     def __init__(self, size="L") -> None:
         self.size = size
-        self.is_baked = False
 
     def bake(self) -> None:
         """Make pizza bake itself"""
@@ -129,4 +129,8 @@ full_menu_str = "\n".join(
 if __name__ == "__main__":
     pepperoni = Pepperoni()
     print(pepperoni.__repr__())
+    print(pepperoni)
+    pepperoni.bake()
+    print(pepperoni)
     print(pepperoni.dict())
+    print(full_menu_str)
