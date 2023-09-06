@@ -1,6 +1,6 @@
 # pizza
 
-<img src="./tom.png" width="230"/>
+<img src="./pictures/tom.png" width="230"/>
 
 ## Example
 There is should be a gif
@@ -21,6 +21,6 @@ There is should be a gif
 * [x] Reformat code into modules
 * [x] Add emoji to every action (static at the moment)
 * [x] Add delay and good stdout to cli commands
-* [ ] Add comments
-* [ ] Make it tidy
+* [x] Add comments
+* [x] Make it tidy
 * [x] Add async cycle bar

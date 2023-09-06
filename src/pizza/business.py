@@ -1,3 +1,5 @@
+"""Business logic of order and delivery.
+Here's introduced classes Client, Restaurant"""
 from collections import defaultdict
 import functools
 import time
@@ -13,6 +15,8 @@ LATENCY_ENABLED = os.getenv(
 
 
 def add_latency(fn):
+    """Add random latency to a class method to simulate real work"""
+
     @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
         time_sleep = 0
@@ -20,8 +24,9 @@ def add_latency(fn):
             multiply = 1000
             # imitate uniform distribution without numpy
             time_sleep = random.randint(1 * multiply, 30 * multiply) / (
-                20 * multiply
-            )
+                10 * multiply
+            )  # max 3 seconds
+
         time.sleep(time_sleep)
         result = fn(self, *args, **kwargs)
         return result
@@ -30,6 +35,8 @@ def add_latency(fn):
 
 
 def log(str_template: str):
+    """Log and print time spent in this function call"""
+
     def outer_wrapper(fn):
         @functools.wraps(fn)
         def wrapper(self, *args, **kwargs):
@@ -47,16 +54,28 @@ def log(str_template: str):
 
 
 class Restaurant:
+    """Entity that bakes pizza, delivers to a client and allows to pickup food
+    Methods:
+        bake: bake pizza. Returns a baked pizza
+        _add_to_stock: adds FoodItem to stock linked to a specific client
+        _retrieve_from_stock: takes items from stock and gives items as list to a customer
+        pickup: interface for clients to pick up their food
+        make_order: interface for clients to make an order. Delivery choice will be inferred from Client
+        deliver: deliver baked food from a restaurant's stock to a customer's stock
+    """
+
     def __init__(self, menu: "UnifiedMenu") -> None:
+        """menu: available food to clients
+        _stock: stock of the restaurant with food waiting for pickup, where key - Client, value - list of FoodItem
+        """
         self.menu = menu
-        self._stock: defaultdict = defaultdict(list)
+        self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
     @log("Baking took {:.2f} seconds")
     @add_spinner("Baking", "👩‍🍳 Baked")
     @add_latency
     def bake(self, pizza: Pizza) -> Pizza:
         if not pizza.is_baked:
-            # print("👩‍🍳 baked", end=" ")
             pizza.is_baked = True
         return pizza
 
@@ -85,11 +104,23 @@ class Restaurant:
     @add_spinner("Delivering", "🛵 Delivered")
     @add_latency
     def deliver(self, client: "Client") -> None:
-        # print("🛵 delivered", end=" ")
         client.add_to_stock(self._retrieve_from_stock(client))
 
 
 class Client:
+    """Entity that orders food from the restaurant. Each instance linked to a specific restaurant
+    Methods:
+        add_to_stock: adds food to client's stock
+        order: orders food from the restaurant
+        _pickup: client picks up his food from the restaurant
+    Attributes:
+        name: name of customer for identification
+        phone_number: phone number of customer for identification
+        restaurant: instance of restaurant to which the client is linked
+        is_delivery (bool): if True restaurant will deliver food, if False - food needs to be picked up by yourself
+        stock: list which contains and collects food items
+    """
+
     def __init__(
         self,
         restaurant: Restaurant,
@@ -116,7 +147,9 @@ class Client:
             pizza_name, self, is_delivery=self.is_delivery
         )
         if not self.is_delivery:
-            food = self._pickup()
+            food = (
+                self._pickup()
+            )  # probably because of decorators it wants self as parameter
             self.add_to_stock(food)
 
     @log("Picking up took {:.2f} seconds")
@@ -134,3 +167,6 @@ if __name__ == "__main__":
     client.order("Pepperoni")
     client.order("Pepperoni")
     print(client.stock)
+    client = Client(restaurant=restaurant, is_delivery=True)
+    client.order("Pepperoni")
+    client.order("Pepperoni")
