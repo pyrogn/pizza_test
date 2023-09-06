@@ -1,8 +1,8 @@
 from collections import UserDict
-from typing import Self
+from typing import Self, Union
 
 
-class DictAssortment(UserDict):
+class DictAssortment(dict):  # UserDict violates LSP...
     def __init__(self):
         super().__init__()
 
@@ -13,7 +13,7 @@ class DictAssortment(UserDict):
     def __setitem__(self, key, value):
         return super().__setitem__(key.lower(), value)
 
-    def __contains__(self, item: str):
+    def __contains__(self, item: str):  # type: ignore
         return super().__contains__(item.lower())
 
 
@@ -21,17 +21,19 @@ assortment = DictAssortment()
 
 
 def pizza_to_assortment(cls):
-    assortment[cls.name] = cls
+    assortment[cls.get_name()] = cls
     return cls
 
 
 class FoodItem:
     """Super class for all food items"""
 
-    recipe: dict
+    recipe: list[str]
     emoji: str
     type_of_food: str
-    _name: [str, None] = None
+    _name: Union[
+        str, None
+    ] = None  # make an option for _name != __class__.__name__
 
 
 class PizzaRecipe(FoodItem):
@@ -43,21 +45,20 @@ class PizzaRecipe(FoodItem):
         self.size = size
         self.is_baked = False
 
-    def bake(self):
-        """Might be incorrect"""
+    def bake(self) -> None:
+        """Make pizza bake itself"""
         if not self.is_baked:
             self.is_baked = True
 
+    # I wish I could use class properties for dynamic attributes
     @classmethod
-    @property
-    def name(cls) -> str:
+    def get_name(cls) -> str:
         if not cls._name:
             return cls.__mro__[0].__name__.title()
         return cls._name.title()
 
     @classmethod
-    @property
-    def clean_recipe(cls) -> str:
+    def get_clean_recipe(cls) -> str:
         """Dict of ingredients to a string"""
         return ", ".join([i for i in cls.recipe])
 
@@ -70,10 +71,12 @@ class PizzaRecipe(FoodItem):
     def __repr__(self) -> str:
         return self.__class__.__name__
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: "PizzaRecipe") -> bool:  # type: ignore
+        if not isinstance(other, PizzaRecipe):
+            return NotImplemented
         return (
             (set(self.recipe) == set(other.recipe))
-            & (self.name == other.name)
+            & (self.get_name == other.get_name)
             & (self.size == other.size)
         )
 
@@ -101,5 +104,6 @@ class Hawaiian(PizzaRecipe):
 
 
 menu_str = "\n".join(
-    f"- {v.name} {v.emoji} : {v.clean_recipe}" for v in assortment.values()
+    f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
+    for v in assortment.values()
 )

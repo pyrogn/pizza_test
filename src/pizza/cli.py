@@ -29,5 +29,5 @@ def order(pizza: str, delivery: bool):
         print(menu_str)
         sys.exit()
     ordered_pizza = assortment[pizza]()
-    print("You want to order", ordered_pizza.name, ordered_pizza.emoji)
+    print("You want to order", ordered_pizza.get_name(), ordered_pizza.emoji)
     client.order(pizza)
