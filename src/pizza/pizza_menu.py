@@ -76,7 +76,7 @@ class Pizza(FoodItem):
 
     @classmethod
     def get_clean_recipe(cls) -> str:
-        return ", ".join([i for i in cls.recipe])
+        return ", ".join([ingredient for ingredient in cls.recipe])
 
     def __str__(self) -> str:
         return (
