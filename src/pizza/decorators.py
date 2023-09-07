@@ -13,7 +13,7 @@ def add_latency(fn):
     @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
         time_sleep = 0
-        # CONFUSION: I am not sure if it is a good way to pass some global defaults
+        # CONFUSION: I am not sure if it is a good way to read some global defaults
         is_latency_enabled = os.getenv(
             "LATENCY_ENABLED", "0"
         )  # if 1 - latency added (cli), if 0 - no latency (everything else)
