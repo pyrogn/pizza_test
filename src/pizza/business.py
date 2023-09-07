@@ -1,80 +1,10 @@
 """Business logic of order and delivery.
 Here's introduced classes Client, Restaurant"""
 from collections import defaultdict
-import functools
-import time
-import random
-import os
-from pizza.spinner import add_spinner
+
+from pizza.decorators import trace_heavy_tasks
 from pizza.pizza_menu import ResilientMenu, FoodItem, Pizza
 from pizza.pizza_menu import pizza_menu, Pepperoni
-
-
-def add_latency(fn):
-    """Add random latency to a class method to simulate real work"""
-
-    @functools.wraps(fn)
-    def wrapper(self, *args, **kwargs):
-        time_sleep = 0
-        is_latency_enabled = os.getenv(
-            "LATENCY_ENABLED", "0"
-        )  # if 1 - latency added (cli), if 0 - no latency (everything else)
-
-        if is_latency_enabled == "1":
-            multiply = 1000
-            # imitate uniform distribution without numpy
-            time_sleep = random.randint(1 * multiply, 30 * multiply) / (
-                10 * multiply
-            )  # max 3 seconds
-
-        time.sleep(time_sleep)
-        result = fn(self, *args, **kwargs)
-        return result
-
-    return wrapper
-
-
-def log_time(str_template: str):
-    """Log and print time spent in the function call"""
-
-    def outer_wrapper(fn):
-        @functools.wraps(fn)
-        def wrapper(self, *args, **kwargs):
-            time_start = time.time()
-            result = fn(self, *args, **kwargs)
-            lapsed_time = time.time() - time_start
-            print(
-                str_template.format(lapsed_time)
-            )  # put time into placeholder
-            return result
-
-        return wrapper
-
-    return outer_wrapper
-
-
-def trace_heavy_tasks(
-    methods,
-    params=None,
-):
-    def wrapper(cls):
-        @functools.wraps(cls, updated=())
-        class DecClass(cls):
-            pass
-
-        for method in methods:
-            original_method = getattr(cls, method)
-            mod_method = log_time(params[method]["log_time_msg"])(
-                add_spinner(
-                    params[method]["start_msg"],
-                    params[method]["end_msg"],
-                )(add_latency(original_method))
-            )
-            setattr(DecClass, method, mod_method)
-        return DecClass
-
-    return wrapper
-
 
 params_for_heavy_tasks_restaurant = {
     "bake": {
@@ -82,7 +12,7 @@ params_for_heavy_tasks_restaurant = {
         "start_msg": "Baking",
         "end_msg": "👩‍🍳 Baked",
     },
-    "deliver": {
+    "_deliver": {
         "log_time_msg": "Delivery took {:.2f} seconds",
         "start_msg": "Delivering",
         "end_msg": "🚲 Delivered",
@@ -99,7 +29,7 @@ params_for_heavy_tasks_client = {
 }
 
 
-@trace_heavy_tasks(["bake", "deliver"], params_for_heavy_tasks_restaurant)
+@trace_heavy_tasks(params_for_heavy_tasks_restaurant)
 class Restaurant:
     """Entity that bakes pizza, delivers to a client and allows to pickup food
     Methods:
@@ -108,7 +38,7 @@ class Restaurant:
         _retrieve_from_stock: takes items from stock and gives items as list to a customer
         pickup: interface for clients to pick up their food
         make_order: interface for clients to make an order. Delivery choice will be inferred from Client
-        deliver: deliver baked food from a restaurant's stock to a customer's stock
+        _deliver: deliver baked food from a restaurant's stock to a customer's stock
     """
 
     def __init__(self, menu: "ResilientMenu") -> None:
@@ -142,13 +72,13 @@ class Restaurant:
         pizza = self.bake(pizza)
         self._add_to_stock(client, pizza)
         if is_delivery:
-            self.deliver(client)
+            self._deliver(client)
 
-    def deliver(self, client: "Client") -> None:
+    def _deliver(self, client: "Client") -> None:
         client.add_to_stock(self._retrieve_from_stock(client))
 
 
-@trace_heavy_tasks(["_pickup"], params_for_heavy_tasks_client)
+@trace_heavy_tasks(params_for_heavy_tasks_client)
 class Client:
     """Entity that orders food from the restaurant. Each instance linked to a specific restaurant
     Methods:
@@ -189,9 +119,7 @@ class Client:
             pizza_name, self, is_delivery=self.is_delivery
         )
         if not self.is_delivery:
-            food = (
-                self._pickup()
-            )  # probably because of decorators it wants self as parameter
+            food = self._pickup()
             self.add_to_stock(food)
 
     def _pickup(self):
@@ -209,6 +137,5 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=True)
     client.order("Pepperoni")
     client.order("Pepperoni")
-    # print(Restaurant.__mro__[1].__wrapped__)
     # print(Restaurant.__wrapped__)
     # print(dir(Restaurant))

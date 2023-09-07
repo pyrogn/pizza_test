@@ -6,8 +6,9 @@ from pizza.pizza_menu import (
 from pizza.business import Restaurant, Client
 from tests.help_funcs import all_pizzas_parameters, all_types_delivery
 
-Restaurant = Restaurant.__wrapped__
-Client = Client.__wrapped__
+# CONFUSION: I don't know how to persuade PyCharm to believe that they have this method
+Restaurant = Restaurant.__wrapped__  # type: ignore
+Client = Client.__wrapped__  # type: ignore
 
 
 @all_pizzas_parameters
