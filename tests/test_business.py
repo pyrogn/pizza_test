@@ -1,8 +1,8 @@
 """Tests for business logic (client, restaurant, pizza)
 """
-from pizza.pizza_menu import (
-    pizza_menu,
-)
+import pytest
+
+from pizza.pizza_menu import pizza_menu
 from pizza.business import Restaurant, Client
 from tests.help_funcs import all_pizzas_parameters, all_types_delivery
 
@@ -11,18 +11,20 @@ Restaurant = Restaurant.__wrapped__  # type: ignore
 Client = Client.__wrapped__  # type: ignore
 
 
+# CONFUSION: can we provide type hint for pizza_class?
+# because linters don't recognize pizza_class as Pizza
 @all_pizzas_parameters
 def test_pizza_equality(pizza_class):
     """Test equality and inequality of the same pizza"""
     assert pizza_class() == pizza_class()
-    assert pizza_class(size="M") != pizza_class(size="L")
+    assert pizza_class(size="XL") != pizza_class(size="L")
 
 
 def test_pizza_inequality():
     """Test on first two pizzas from menu that they are considered different"""
     if len(pizza_menu) > 1:
         pizza1, pizza2 = list(pizza_menu.values())[:2]
-        assert pizza1(size="M") != pizza2(size="M")
+        assert pizza1(size="L") != pizza2(size="L")
 
 
 @all_types_delivery
@@ -47,6 +49,12 @@ def test_different_pizza(pizza_class):
     assert pizza.is_baked is False
     pizza.bake()
     assert pizza.is_baked is True
+
+
+@all_pizzas_parameters
+def test_unknown_size_pizza(pizza_class):
+    with pytest.raises(ValueError):
+        pizza_class(size="definitely_unknown_size")
 
 
 def test_pizza_order_diff_clients():
