@@ -28,8 +28,7 @@ def menu():
 @click.option("--delivery", default=False, is_flag=True)
 @click.argument("pizza", nargs=1)
 def order(pizza: str, delivery: bool):
-    """Create a restaurant
-    Create a client who is linked to this restaurant and has delivery flag"""
+    """Order a pizza from the menu"""
     restaurant = Restaurant(pizza_menu)
     client = Client(restaurant=restaurant, is_delivery=delivery)
 
