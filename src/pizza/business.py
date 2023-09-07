@@ -1,5 +1,7 @@
 """Business logic of order and delivery.
-Here's introduced classes Client, Restaurant"""
+Classes:
+    Client
+    Restaurant"""
 from collections import defaultdict
 
 from pizza.decorators import trace_heavy_tasks
@@ -31,43 +33,49 @@ params_for_heavy_tasks_client = {
 
 @trace_heavy_tasks(params_for_heavy_tasks_restaurant)
 class Restaurant:
-    """Entity that bakes pizza, delivers to a client and allows to pickup food
+    """Entity that bakes pizza, delivers food to a client and allows to pickup food
     Methods:
         bake: bake pizza. Returns a baked pizza
-        _add_to_stock: adds FoodItem to stock linked to a specific client
-        _retrieve_from_stock: takes items from stock and gives items as list to a customer
+        _add_to_stock: adds FoodItem to _stock linked to a specific client
+        _retrieve_from_stock: takes items from _stock and gives items as list to a customer
         pickup: interface for clients to pick up their food
         make_order: interface for clients to make an order. Delivery choice will be inferred from Client
-        _deliver: deliver baked food from a restaurant's stock to a customer's stock
+        _deliver: deliver baked food from a restaurant's _stock to a customer's _stock
     """
 
     def __init__(self, menu: "ResilientMenu") -> None:
         """menu: available food to clients
-        _stock: stock of the restaurant with food waiting for pickup, where key - Client, value - list of FoodItem
+        _stock: _stock of the restaurant with food waiting for pickup,
+            where key - Client, value - list of FoodItem
         """
         self.menu = menu
         self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
     def bake(self, pizza: Pizza) -> Pizza:
+        """Takes pizza and makes it baked. If it was already baked, return as it is"""
         if not pizza.is_baked:
             pizza.is_baked = True
         return pizza
 
     def _add_to_stock(self, client: "Client", item: FoodItem) -> None:
+        """Add baked food to a _stock (list) where key=client who ordered it"""
         self._stock[client].append(item)
 
     def _retrieve_from_stock(self, client: "Client") -> list[FoodItem]:
+        """Take all food from _stock for this client"""
         items = self._stock[client]
         del self._stock[client]
         return items
 
     def pickup(self, client: "Client") -> list[FoodItem]:
+        """Give food to client who wants to pick up by himself"""
         food = self._retrieve_from_stock(client)
         return food
 
     def make_order(
         self, pizza_name, client: "Client", is_delivery=False
     ) -> None:
+        """Process order of food by a client"""
         pizza = self.menu[pizza_name]()
         pizza = self.bake(pizza)
         self._add_to_stock(client, pizza)
@@ -75,6 +83,7 @@ class Restaurant:
             self._deliver(client)
 
     def _deliver(self, client: "Client") -> None:
+        """Deliver food to a client and put it in his _stock"""
         client.add_to_stock(self._retrieve_from_stock(client))
 
 
@@ -90,7 +99,7 @@ class Client:
         phone_number: phone number of customer for identification
         restaurant: instance of restaurant to which the client is linked
         is_delivery (bool): if True restaurant will deliver food, if False - food needs to be picked up by yourself
-        stock: list which contains and collects food items
+        _stock: list which contains and collects food items for this client
     """
 
     def __init__(
@@ -104,17 +113,21 @@ class Client:
         self.phone_number = phone_number
         self.restaurant = restaurant
         self.is_delivery = is_delivery
-        self.stock: list[FoodItem] = []
+        self._stock: list[FoodItem] = []
 
     def __hash__(self):
         """Uniquely identify a client"""
         return hash((self.name, self.phone_number))
 
     def add_to_stock(self, items: list[FoodItem]) -> None:
+        """Add food items to a client's stock"""
         for item in items:
-            self.stock.append(item)
+            self._stock.append(item)
 
     def order(self, pizza_name: str) -> None:
+        """Make an order for food in a restaurant.
+        If is_delivery=True then wait for delivery
+        If is_delivery=False then pick up by yourself"""
         self.restaurant.make_order(
             pizza_name, self, is_delivery=self.is_delivery
         )
@@ -122,7 +135,8 @@ class Client:
             food = self._pickup()
             self.add_to_stock(food)
 
-    def _pickup(self):
+    def _pickup(self) -> list[FoodItem]:
+        """Pickup all ordered food from a restaurant"""
         food = self.restaurant.pickup(self)
         return food
 
@@ -133,9 +147,8 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=False)
     client.order("Pepperoni")
     client.order("Pepperoni")
-    print(client.stock)
+    print(client._stock)
     client = Client(restaurant=restaurant, is_delivery=True)
     client.order("Pepperoni")
     client.order("Pepperoni")
     # print(Restaurant.__wrapped__)
-    # print(dir(Restaurant))

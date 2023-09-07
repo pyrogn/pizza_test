@@ -1,12 +1,12 @@
 """Tests for business logic (client, restaurant, pizza)
-I probably need to clean methods in classes from decorators using __wrapped__"""
+"""
 from pizza.pizza_menu import (
     pizza_menu,
 )
 from pizza.business import Restaurant, Client
 from tests.help_funcs import all_pizzas_parameters, all_types_delivery
 
-# CONFUSION: I don't know how to persuade PyCharm to believe that they have this method
+# CONFUSION: I don't know how to persuade PyCharm/mypy to believe that they have this attribute
 Restaurant = Restaurant.__wrapped__  # type: ignore
 Client = Client.__wrapped__  # type: ignore
 
@@ -18,18 +18,25 @@ def test_pizza_equality(pizza_class):
     assert pizza_class(size="M") != pizza_class(size="L")
 
 
+def test_pizza_inequality():
+    """Test on first two pizzas from menu that they are considered different"""
+    if len(pizza_menu) > 1:
+        pizza1, pizza2 = list(pizza_menu.values())[:2]
+        assert pizza1(size="M") != pizza2(size="M")
+
+
 @all_types_delivery
 def test_pizza_order(is_delivery):
-    """Test that client ordered 2 pizzas, has 2 pizzas in his stock
+    """Test that client ordered 2 pizzas, has 2 pizzas in his _stock
     And pizzas are baked
-    No pizza left in a restaurant"""
+    No pizza left in a restaurant for him"""
     restaurant = Restaurant(pizza_menu)
     client = Client(is_delivery=is_delivery, restaurant=restaurant)
     client.order("Pepperoni")
     client.order("Pepperoni")
-    assert len(client.stock) == 2
+    assert len(client._stock) == 2
     assert len(restaurant._stock) == 0
-    assert all([i.is_baked is True for i in client.stock])
+    assert all([pizza.is_baked is True for pizza in client._stock])
 
 
 @all_pizzas_parameters
@@ -42,8 +49,7 @@ def test_different_pizza(pizza_class):
     assert pizza.is_baked is True
 
 
-@all_types_delivery
-def test_pizza_order_diff_clients(is_delivery):
+def test_pizza_order_diff_clients():
     """Test that pizza is picked up and delivered to a client who ordered
     Side note: checks aren't meaningful because orders are blocking sequential
     """
@@ -54,5 +60,5 @@ def test_pizza_order_diff_clients(is_delivery):
     client2.order("Pepperoni")
     assert client1 != client2
     assert len(restaurant._stock) == 0
-    assert len(client1.stock) == 1
-    assert len(client2.stock) == 1
+    assert len(client1._stock) == 1
+    assert len(client2._stock) == 1

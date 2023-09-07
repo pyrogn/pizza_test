@@ -1,5 +1,10 @@
-"""Generating a restaurant's menu and classes of Pizza"""
-import os
+"""Generating a restaurant's menu and classes of Pizza
+Classes:
+    FoodItem
+        Pizza
+            Pepperoni
+            Margherita
+            Hawaiian"""
 from collections import UserDict
 from typing import Union, TypeVar, Type
 
@@ -29,6 +34,9 @@ class Pizza(FoodItem):
         get_name: get name of the class or provided in alt_name
         get_clean_recipe: get recipe as a string. Ingredients separated by a comma
         dict: returns a recipe as dict
+    Attributes:
+        is_baked (bool): is pizza baked, or it is a template
+        size: size of pizza (L or M) (it isn't used anywhere else)
     """
 
     type_of_food = "pizza"
@@ -37,19 +45,22 @@ class Pizza(FoodItem):
         self.size = size
 
     def bake(self) -> None:
-        """Make pizza bake itself"""
+        """Make pizza bake itself
+        Changes is_baked attr to True"""
         if not self.is_baked:
             self.is_baked = True
 
-    # I wish I could use class properties for dynamic attributes
+    # CONFUSION: can we make dynamic attribute (like property) for a class?
     @classmethod
     def get_name(cls) -> str:
+        """Infer name from the class or get alt_name if provided"""
         if not cls.alt_name:
             return cls.__mro__[0].__name__.title()
         return cls.alt_name.title()
 
     @classmethod
     def get_clean_recipe(cls) -> str:
+        """Return recipe of pizza as ingredients separated by comma"""
         return ", ".join([ingredient for ingredient in cls.recipe])
 
     def __str__(self) -> str:
@@ -71,8 +82,9 @@ class Pizza(FoodItem):
             & (self.size == other.size)
         )
 
-    def dict(self):
-        return self.recipe
+    def dict(self) -> dict[str, list[str]]:
+        """Return dictionary with key=name of pizza, value=recipe of pizza"""
+        return {self.get_name(): self.recipe}
 
 
 class ResilientMenu(UserDict):
@@ -94,7 +106,7 @@ class ResilientMenu(UserDict):
 
 pizza_menu = ResilientMenu()
 
-P = TypeVar("P", bound=Pizza)
+P = TypeVar("P", bound=Pizza)  # to match subclasses
 
 
 def add_pizza_to_menu(cls: Type[P]) -> Type[P]:
@@ -123,7 +135,7 @@ class Hawaiian(Pizza):
     alt_name = "Hawaiian Special"  # Give a complex name for a test
 
 
-# full menu as a string
+# full menu as a single multiline string
 full_menu_str = "\n".join(
     f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
     for v in pizza_menu.values()

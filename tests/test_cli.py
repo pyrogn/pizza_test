@@ -1,4 +1,6 @@
-"""Basic tests tha cli app is running"""
+"""Tests for CLI application
+Tests are very basic and might be improved by exact matching
+"""
 import os
 from pizza.pizza_menu import pizza_menu
 from pizza.cli import cli
@@ -10,7 +12,7 @@ os.environ["LATENCY_ENABLED"] = "0"
 
 
 def test_menu():
-    """Test that there are 3 pizzas on the menu"""
+    """Test that cli prints all pizzas from the menu"""
     runner = CliRunner()
     result = runner.invoke(cli, ["menu"])
     assert result.exit_code == 0
@@ -48,6 +50,7 @@ def test_pizza_incorrect_order(is_delivery):
         else ["order", pizza_name]
     )
     result = runner.invoke(cli, params_cli)
+    assert result.exit_code == 0
     assert len(result.output.split("\n")) == 1 + 1 + len(
         pizza_menu
     )  # header + msg + menu
