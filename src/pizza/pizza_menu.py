@@ -27,6 +27,9 @@ class FoodItem:
     is_baked: bool = False
 
 
+AVAILABLE_PIZZA_SIZES = ["L", "XL"]
+
+
 class Pizza(FoodItem):
     """Specialization of food - pizza
     Methods:
@@ -36,12 +39,17 @@ class Pizza(FoodItem):
         dict: returns a recipe as dict
     Attributes:
         is_baked (bool): is pizza baked, or it is a template
-        size: size of pizza (L or M) (it isn't used anywhere else)
+        size: size of pizza (L or XL)
+    Raises:
+        PizzaNameException: raised if name of pizza not on the menu
+        PizzaSizeException: raised if size of pizza is not available
     """
 
     type_of_food = "pizza"
 
     def __init__(self, size="L") -> None:
+        if size.upper() not in AVAILABLE_PIZZA_SIZES:
+            raise ValueError(f"{size} size not in {AVAILABLE_PIZZA_SIZES}")
         self.size = size
 
     def bake(self) -> None:
@@ -136,9 +144,12 @@ class Hawaiian(Pizza):
 
 
 # full menu as a single multiline string
-full_menu_str = "\n".join(
-    f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
-    for v in pizza_menu.values()
+full_menu_str = (
+    "\n".join(
+        f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
+        for v in pizza_menu.values()
+    )
+    + f"\nAvailable pizza sizes: {', '.join(AVAILABLE_PIZZA_SIZES)}"
 )
 
 if __name__ == "__main__":
@@ -149,3 +160,7 @@ if __name__ == "__main__":
     print(pepperoni)
     print(pepperoni.dict())
     print(full_menu_str)
+    try:
+        print(Pepperoni(size="s"))
+    except ValueError:
+        print("error with wrong size escaped")
