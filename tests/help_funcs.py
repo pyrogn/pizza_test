@@ -4,7 +4,7 @@ Attributes:
     all_types_delivery: all types of delivery (True, False)"""
 import pytest
 
-from pizza.pizza_menu import pizza_menu, Pepperoni, Margherita, Hawaiian
+from pizza.pizza_menu import pizza_menu
 
 all_pizzas_parameters = pytest.mark.parametrize(
     "pizza_class", [klass for klass in pizza_menu.values()]
