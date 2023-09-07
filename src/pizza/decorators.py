@@ -1,4 +1,4 @@
-"""Decorators for adding a delay and help messages to heavy tasks"""
+"""Decorators for adding a delay, spinner and help messages to heavy tasks"""
 import functools
 import os
 import random
@@ -8,24 +8,29 @@ from pizza.spinner import add_spinner
 
 
 def add_latency(fn):
-    """Add random latency to a class method to simulate real work"""
+    """Add random latency to a class method to simulate real work
+    Latency is distributed uniformly
+    min_ms: minimum latency in ms
+    max_ms: maximum latency in ms"""
+    min_ms = 150
+    max_ms = 3_000
 
     @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
-        time_sleep = 0
+        seconds_sleep = 0
         # CONFUSION: I am not sure if it is a good way to read some global defaults
         is_latency_enabled = os.getenv(
             "LATENCY_ENABLED", "0"
         )  # if 1 - latency added (cli), if 0 - no latency (everything else)
 
         if is_latency_enabled == "1":
-            multiply = 1000
+            smoothness = 1000
             # imitate uniform distribution without numpy
-            time_sleep = random.randint(1 * multiply, 30 * multiply) / (
-                10 * multiply
-            )  # max 3 seconds
+            seconds_sleep = random.randint(
+                min_ms * smoothness, max_ms * smoothness
+            ) / (1000 * smoothness)
 
-        time.sleep(time_sleep)
+        time.sleep(seconds_sleep)
         result = fn(self, *args, **kwargs)
         return result
 
@@ -33,7 +38,9 @@ def add_latency(fn):
 
 
 def log_time(str_template: str):
-    """Log and print time spent in the function call"""
+    """Log and print time spent in the function call
+    str_template: string with placeholder to insert time spent in function
+        Example: Delivery took {:.2f} seconds"""
 
     def outer_wrapper(fn):
         @functools.wraps(fn)
@@ -41,9 +48,7 @@ def log_time(str_template: str):
             time_start = time.time()
             result = fn(self, *args, **kwargs)
             lapsed_time = time.time() - time_start
-            print(
-                str_template.format(lapsed_time)
-            )  # put time into placeholder
+            print(str_template.format(lapsed_time), end="\n")
             return result
 
         return wrapper
@@ -58,6 +63,18 @@ MsgForParam = dict[str, str]
 def trace_heavy_tasks(
     params: dict[MethodName, MsgForParam],
 ):
+    """Decorate a class adding functionality to selected methods
+    added functionality:
+        synthetic latency
+        spinner during task execution
+        time logging
+    parameters:
+        params: dict with key=method_name, value - map of keyword and text
+        required keywords:
+            start_msg: Message while running
+            end_msg: Message at the finish
+            log_time_msg: String with placeholder to log time"""
+
     def wrapper(cls):
         @functools.wraps(cls, updated=())
         class DecClass(cls):
@@ -74,7 +91,9 @@ def trace_heavy_tasks(
             apply_timer = log_time(m_params["log_time_msg"])
 
             full_mod_method = apply_timer(
-                apply_spinner(apply_latency(original_method))
+                apply_spinner(
+                    apply_latency(original_method)
+                )  # or loop would be better?
             )
             setattr(DecClass, method_name, full_mod_method)
         return DecClass
