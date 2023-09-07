@@ -9,10 +9,6 @@ from pizza.spinner import add_spinner
 from pizza.pizza_menu import ResilientMenu, FoodItem, Pizza
 from pizza.pizza_menu import pizza_menu, Pepperoni
 
-LATENCY_ENABLED = os.getenv(
-    "LATENCY_ENABLED", "0"
-)  # if 1 - latency added (cli), if 0 - no latency (everything else)
-
 
 def add_latency(fn):
     """Add random latency to a class method to simulate real work"""
@@ -20,7 +16,11 @@ def add_latency(fn):
     @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
         time_sleep = 0
-        if LATENCY_ENABLED == "1":
+        is_latency_enabled = os.getenv(
+            "LATENCY_ENABLED", "0"
+        )  # if 1 - latency added (cli), if 0 - no latency (everything else)
+
+        if is_latency_enabled == "1":
             multiply = 1000
             # imitate uniform distribution without numpy
             time_sleep = random.randint(1 * multiply, 30 * multiply) / (
@@ -34,7 +34,7 @@ def add_latency(fn):
     return wrapper
 
 
-def log(str_template: str):
+def log_time(str_template: str):
     """Log and print time spent in the function call"""
 
     def outer_wrapper(fn):
@@ -53,6 +53,53 @@ def log(str_template: str):
     return outer_wrapper
 
 
+def trace_heavy_tasks(
+    methods,
+    params=None,
+):
+    def wrapper(cls):
+        @functools.wraps(cls, updated=())
+        class DecClass(cls):
+            pass
+
+        for method in methods:
+            original_method = getattr(cls, method)
+            mod_method = log_time(params[method]["log_time_msg"])(
+                add_spinner(
+                    params[method]["start_msg"],
+                    params[method]["end_msg"],
+                )(add_latency(original_method))
+            )
+            setattr(DecClass, method, mod_method)
+        return DecClass
+
+    return wrapper
+
+
+params_for_heavy_tasks_restaurant = {
+    "bake": {
+        "log_time_msg": "Baking took {:.2f} seconds",
+        "start_msg": "Baking",
+        "end_msg": "👩‍🍳 Baked",
+    },
+    "deliver": {
+        "log_time_msg": "Delivery took {:.2f} seconds",
+        "start_msg": "Delivering",
+        "end_msg": "🚲 Delivered",
+    },
+}
+
+
+params_for_heavy_tasks_client = {
+    "_pickup": {
+        "log_time_msg": "Picking up took {:.2f} seconds",
+        "start_msg": "Picking up",
+        "end_msg": "🏎️  Picked up",
+    }
+}
+
+
+@trace_heavy_tasks(["bake", "deliver"], params_for_heavy_tasks_restaurant)
 class Restaurant:
     """Entity that bakes pizza, delivers to a client and allows to pickup food
     Methods:
@@ -71,9 +118,6 @@ class Restaurant:
         self.menu = menu
         self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
-    @log("Baking took {:.2f} seconds")
-    @add_spinner("Baking", "👩‍🍳 Baked")
-    @add_latency
     def bake(self, pizza: Pizza) -> Pizza:
         if not pizza.is_baked:
             pizza.is_baked = True
@@ -100,13 +144,11 @@ class Restaurant:
         if is_delivery:
             self.deliver(client)
 
-    @log("Delivery took {:.2f} seconds")
-    @add_spinner("Delivering", "🚲 Delivered")
-    @add_latency
     def deliver(self, client: "Client") -> None:
         client.add_to_stock(self._retrieve_from_stock(client))
 
 
+@trace_heavy_tasks(["_pickup"], params_for_heavy_tasks_client)
 class Client:
     """Entity that orders food from the restaurant. Each instance linked to a specific restaurant
     Methods:
@@ -152,9 +194,6 @@ class Client:
             )  # probably because of decorators it wants self as parameter
             self.add_to_stock(food)
 
-    @log("Picking up took {:.2f} seconds")
-    @add_spinner("Picking up", "🏎️  Picked up")
-    @add_latency
     def _pickup(self):
         food = self.restaurant.pickup(self)
         return food
@@ -170,3 +209,6 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=True)
     client.order("Pepperoni")
     client.order("Pepperoni")
+    # print(Restaurant.__mro__[1].__wrapped__)
+    # print(Restaurant.__wrapped__)
+    # print(dir(Restaurant))

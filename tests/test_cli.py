@@ -1,8 +1,13 @@
 """Basic tests tha cli app is running"""
+import os
 from pizza.pizza_menu import pizza_menu
+import pizza.business  # to disable latency by importing before cli
 from pizza.cli import cli
 from click.testing import CliRunner
 from .help_funcs import all_pizzas_parameters, all_types_delivery
+
+
+os.environ["LATENCY_ENABLED"] = "0"
 
 
 def test_menu():

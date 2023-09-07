@@ -6,6 +6,9 @@ from pizza.pizza_menu import (
 from pizza.business import Restaurant, Client
 from tests.help_funcs import all_pizzas_parameters, all_types_delivery
 
+Restaurant = Restaurant.__wrapped__
+Client = Client.__wrapped__
+
 
 @all_pizzas_parameters
 def test_pizza_equality(pizza_class):

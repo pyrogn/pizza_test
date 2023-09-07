@@ -2,12 +2,13 @@
 import sys
 import os
 
-os.environ[
-    "LATENCY_ENABLED"
-] = "1"  # enable latency only in cli mode and this doesn't look good
 from pizza.pizza_menu import pizza_menu, full_menu_str
 from pizza.business import Restaurant, Client
 import click
+
+os.environ[
+    "LATENCY_ENABLED"
+] = "1"  # enable latency only in cli mode and this doesn't look good
 
 
 @click.group()

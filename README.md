@@ -15,6 +15,12 @@ https://github.com/pyrogn/pizza_test/assets/60060559/f889dad5-a3fa-46f8-98d0-bb4
 5. `python -m pip install .` or for development `pdm install -d`
 6. `pre-commit install` (development)
 
+## How to use
+
+1. `pizza menu` get list of all available pizzas
+2. `pizza order <pizza name>` order a pizza and pick it up from a restaurant. Escape pizza name if it has more than 1 word.
+3. `pizza order <pizza name> --delivery` order a pizza and get delivery
+
 ## TODO
 * [x] Add pre-commit hooks for pytest and black,isort
 * [x] Add pytest checks to GitHub Actions
