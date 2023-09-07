@@ -4,8 +4,14 @@ import itertools
 from threading import Event, Thread
 
 
-def spin(start_msg: str, end_msg: str, done: Event):
-    """Cycle dashes forever until the other thread don't change the Event"""
+def spin(start_msg: str, end_msg: str, done: Event) -> None:
+    """Cycle dashes forever until the other thread don't change the Event
+    First will be printed start_msg with a spinner
+    After Event is True end_msg printed in the same line, replacing start_msg
+    :param start_msg: message printed in the start and until the finish
+    :param end_msg: message printed in the end
+    :param done: when Event is True, spinner finishes and prints end_msg
+    """
     for char in itertools.cycle(r"\|/-"):
         status = f"\r {char} {start_msg}"
         print(status, end="", flush=True)
@@ -16,7 +22,7 @@ def spin(start_msg: str, end_msg: str, done: Event):
     )  # print success message rewriting previous msg
 
 
-def add_spinner(start_msg, end_msg):
+def add_spinner(start_msg: str, end_msg: str):
     def outer_wrapper(fn):
         functools.wraps(fn)
 

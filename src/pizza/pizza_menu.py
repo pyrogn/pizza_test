@@ -1,4 +1,5 @@
 """Generating a restaurant's menu and classes of Pizza"""
+import os
 from collections import UserDict
 from typing import Union, TypeVar, Type
 
@@ -96,26 +97,26 @@ pizza_menu = ResilientMenu()
 P = TypeVar("P", bound=Pizza)
 
 
-def pizza_to_assortment(cls: Type[P]) -> Type[P]:
+def add_pizza_to_menu(cls: Type[P]) -> Type[P]:
     """Add pizza to a dict after every definition
     Alternative - using Pizza.__subclasses__()"""
     pizza_menu[cls.get_name()] = cls
     return cls
 
 
-@pizza_to_assortment
+@add_pizza_to_menu
 class Margherita(Pizza):
     recipe = ["tomato sauce", "mozzarella", "tomatoes"]
     emoji = "🧀"
 
 
-@pizza_to_assortment
+@add_pizza_to_menu
 class Pepperoni(Pizza):
     recipe = ["tomato sauce", "mozzarella", "pepperoni"]
     emoji = "🍕"
 
 
-@pizza_to_assortment
+@add_pizza_to_menu
 class Hawaiian(Pizza):
     recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
     emoji = "🍍"
