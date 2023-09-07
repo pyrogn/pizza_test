@@ -41,8 +41,7 @@ class Pizza(FoodItem):
         is_baked (bool): is pizza baked, or it is a template
         size: size of pizza (L or XL)
     Raises:
-        PizzaNameException: raised if name of pizza not on the menu
-        PizzaSizeException: raised if size of pizza is not available
+        ValueError: raised if size of pizza is not available
     """
 
     type_of_food = "pizza"
