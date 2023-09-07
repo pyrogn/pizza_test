@@ -4,7 +4,7 @@
 
 ## Example
 
-https://github.com/pyrogn/pizza_test/assets/60060559/f889dad5-a3fa-46f8-98d0-bb49113dccc4
+https://github.com/pyrogn/pizza_test/assets/60060559/36dbf444-d156-475e-8243-03c9d807cde2
 
 
 ## How to install
