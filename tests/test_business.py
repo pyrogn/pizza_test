@@ -2,8 +2,9 @@
 """
 import pytest
 
+from pizza.business import Client, Restaurant
 from pizza.pizza_menu import pizza_menu
-from pizza.business import Restaurant, Client
+
 from .help_funcs import all_pizzas_parameters, all_types_delivery
 
 # CONFUSION: I don't know how to persuade PyCharm/mypy to believe that they have this attribute

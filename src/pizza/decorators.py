@@ -1,10 +1,11 @@
 """Decorators for adding a delay, spinner and help messages to heavy tasks"""
 import functools
-from functools import reduce
 import os
 import random
 import time
+from functools import reduce
 from typing import TypedDict
+
 from pizza.spinner import add_spinner
 
 
@@ -27,9 +28,9 @@ def add_latency(fn):
         if is_latency_enabled == "1":
             smoothness = 1000
             # imitate uniform distribution without numpy
-            seconds_sleep = random.randint(
-                min_ms * smoothness, max_ms * smoothness
-            ) / (1000 * smoothness)
+            seconds_sleep = random.randint(min_ms * smoothness, max_ms * smoothness) / (
+                1000 * smoothness
+            )
 
         time.sleep(seconds_sleep)
         result = fn(self, *args, **kwargs)
@@ -93,9 +94,7 @@ def trace_heavy_tasks(
             m_params = params[method_name]
 
             apply_latency = add_latency
-            apply_spinner = add_spinner(
-                m_params["start_msg"], m_params["end_msg"]
-            )
+            apply_spinner = add_spinner(m_params["start_msg"], m_params["end_msg"])
             apply_timer = log_time(m_params["log_time_msg"])
 
             func_list = [apply_latency, apply_spinner, apply_timer]
