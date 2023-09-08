@@ -41,11 +41,13 @@ class Restaurant:
     Methods:
         bake: bake pizza. Returns a baked pizza
         _add_to_stock: adds FoodItem to _stock linked to a specific client
-        _retrieve_from_stock: takes items from _stock and gives items as list to a customer
+        _retrieve_from_stock: takes items from _stock
+            and gives items as list to a customer
         pickup: interface for clients to pick up their food
         make_order: interface for clients to make an order.
             Delivery choice will be inferred from Client
-        _deliver: deliver baked food from a restaurant's _stock to a customer's _stock
+        _deliver: deliver baked food from a restaurant's _stock
+            to a customer's _stock
     """
 
     def __init__(self, menu: "LowerKeyMenu") -> None:
@@ -57,7 +59,8 @@ class Restaurant:
         self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
     def bake(self, pizza: Pizza) -> Pizza:
-        """Takes pizza and makes it baked. If it was already baked, return as it is"""
+        """Takes pizza and makes it baked.
+        If it was already baked, return as it is"""
         if not pizza.is_baked:
             pizza.is_baked = True
         return pizza
@@ -92,7 +95,7 @@ class Restaurant:
 
 @trace_heavy_tasks(params_for_heavy_tasks_client)
 class Client:
-    """Entity that orders food from the restaurant. Each instance linked to a specific restaurant
+    """Client orders food from the restaurant. Each client linked to the restaurant
     Methods:
         add_to_stock: adds food to client's stock
         order: orders food from the restaurant

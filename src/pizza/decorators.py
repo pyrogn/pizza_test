@@ -28,9 +28,9 @@ def add_latency(fn):
         if is_latency_enabled == "1":
             smoothness = 1000
             # imitate uniform distribution without numpy
-            seconds_sleep = random.randint(min_ms * smoothness, max_ms * smoothness) / (
-                1000 * smoothness
-            )
+            seconds_sleep = random.randint(
+                min_ms * smoothness, max_ms * smoothness
+            ) / (1000 * smoothness)
 
         time.sleep(seconds_sleep)
         result = fn(self, *args, **kwargs)
@@ -98,10 +98,12 @@ def trace_heavy_tasks(
             apply_timer = log_time(m_params["log_time_msg"])
 
             func_list = [apply_latency, apply_spinner, apply_timer]
-            full_mod_method = reduce(  # apply every function consecutively to original_method
-                lambda o, func: func(o),
-                func_list,
-                original_method,
+            full_mod_method = (
+                reduce(  # apply every function consecutively to original_method
+                    lambda o, func: func(o),
+                    func_list,
+                    original_method,
+                )
             )
 
             setattr(DecClass, method_name, full_mod_method)

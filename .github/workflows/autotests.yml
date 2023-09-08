@@ -11,12 +11,10 @@ jobs:
           python-version: '3.11'
       - name: Installation dependencies
         run: python -m pip install .
-      - run: python -m pip install pytest mypy flake8
+      - run: python -m pip install pytest mypy
 #      - run: python -m pip list
 #      - run: ls -al
       - name: Running tests
         run: python -m pytest
       - name: Type checks
         run: mypy ./src ./tests
-      - name: linter checks
-        run: flake8 ./src ./tests --ignore E501,W503

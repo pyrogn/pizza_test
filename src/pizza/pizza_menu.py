@@ -16,13 +16,16 @@ class FoodItem:
         recipe: recipe of this food
         emoji: emoji, associated with this food
         type_of_food: general name of this food
-        alt_name: alternative name of food if exists. By default, a class name will be used
+        alt_name: alternative name of food if exists.
+            By default, a class name will be used
     """
 
     recipe: list[str]
     emoji: str
     type_of_food: str
-    alt_name: Union[str, None] = None  # make an option for _name != __class__.__name__
+    alt_name: Union[
+        str, None
+    ] = None  # make an option for _name != __class__.__name__
     is_baked: bool = False
 
 
@@ -79,7 +82,8 @@ class Pizza(FoodItem):
         return f"{self.__class__.__name__}(size={self.size!r})"
 
     def __eq__(self, other: "Pizza") -> bool:  # type: ignore
-        """Compare pizzas. They will be equal only with the same recipe, size and name"""
+        """Compare pizzas.
+        They will be equal only with the same recipe, size and name"""
         if not isinstance(other, Pizza):
             return NotImplemented
         return (
@@ -143,7 +147,10 @@ class Hawaiian(Pizza):
 
 # full menu as a single multiline string
 full_menu_str = (
-    "\n".join(f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}" for v in pizza_menu.values())
+    "\n".join(
+        f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
+        for v in pizza_menu.values()
+    )
     + f"\nAvailable pizza sizes: {', '.join(AVAILABLE_PIZZA_SIZES)}"
 )
 
