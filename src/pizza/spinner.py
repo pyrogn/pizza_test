@@ -33,7 +33,8 @@ def add_spinner(start_msg: str, end_msg: str):
             spinner.start()  # start a second thread
             result = fn(
                 self, *args, **kwargs
-            )  # time.sleep inside the function will block main thread and release GIL
+            )  # time.sleep inside the function will block main thread
+            # and release GIL
             done.set()  # going to stop spin
             spinner.join()  # wait until spin finishes
             return result

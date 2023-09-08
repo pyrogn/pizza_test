@@ -4,9 +4,14 @@ Classes:
     Restaurant"""
 from collections import defaultdict
 
-from pizza.decorators import trace_heavy_tasks, MsgForParam
-from pizza.pizza_menu import LowerKeyMenu, FoodItem, Pizza
-from pizza.pizza_menu import pizza_menu, Pepperoni
+from pizza.decorators import MsgForParam, trace_heavy_tasks
+from pizza.pizza_menu import (
+    FoodItem,
+    LowerKeyMenu,
+    Pepperoni,
+    Pizza,
+    pizza_menu,
+)
 
 params_for_heavy_tasks_restaurant = {
     "bake": MsgForParam(
@@ -36,10 +41,13 @@ class Restaurant:
     Methods:
         bake: bake pizza. Returns a baked pizza
         _add_to_stock: adds FoodItem to _stock linked to a specific client
-        _retrieve_from_stock: takes items from _stock and gives items as list to a customer
+        _retrieve_from_stock: takes items from _stock
+            and gives items as list to a customer
         pickup: interface for clients to pick up their food
-        make_order: interface for clients to make an order. Delivery choice will be inferred from Client
-        _deliver: deliver baked food from a restaurant's _stock to a customer's _stock
+        make_order: interface for clients to make an order.
+            Delivery choice will be inferred from Client
+        _deliver: deliver baked food from a restaurant's _stock
+            to a customer's _stock
     """
 
     def __init__(self, menu: "LowerKeyMenu") -> None:
@@ -51,7 +59,8 @@ class Restaurant:
         self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
     def bake(self, pizza: Pizza) -> Pizza:
-        """Takes pizza and makes it baked. If it was already baked, return as it is"""
+        """Takes pizza and makes it baked.
+        If it was already baked, return as it is"""
         if not pizza.is_baked:
             pizza.is_baked = True
         return pizza
@@ -71,9 +80,7 @@ class Restaurant:
         food = self._retrieve_from_stock(client)
         return food
 
-    def make_order(
-        self, pizza_name, client: "Client", is_delivery=False
-    ) -> None:
+    def make_order(self, pizza_name, client: "Client", is_delivery=False) -> None:
         """Process order of food by a client"""
         pizza = self.menu[pizza_name]()
         pizza = self.bake(pizza)
@@ -88,7 +95,7 @@ class Restaurant:
 
 @trace_heavy_tasks(params_for_heavy_tasks_client)
 class Client:
-    """Entity that orders food from the restaurant. Each instance linked to a specific restaurant
+    """Client orders food from the restaurant. Each client linked to the restaurant
     Methods:
         add_to_stock: adds food to client's stock
         order: orders food from the restaurant
@@ -97,7 +104,8 @@ class Client:
         name: name of customer for identification
         phone_number: phone number of customer for identification
         restaurant: instance of restaurant to which the client is linked
-        is_delivery (bool): if True restaurant will deliver food, if False - food needs to be picked up by yourself
+        is_delivery (bool): if True restaurant will deliver food,
+            if False - food needs to be picked up by yourself
         _stock: list which contains and collects food items for this client
     """
 
@@ -127,9 +135,7 @@ class Client:
         """Make an order for food in a restaurant.
         If is_delivery=True then wait for delivery
         If is_delivery=False then pick up by yourself"""
-        self.restaurant.make_order(
-            pizza_name, self, is_delivery=self.is_delivery
-        )
+        self.restaurant.make_order(pizza_name, self, is_delivery=self.is_delivery)
         if not self.is_delivery:
             food = self._pickup()
             self.add_to_stock(food)

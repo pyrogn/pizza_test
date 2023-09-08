@@ -7,7 +7,7 @@ Classes:
             Hawaiian
     LowerKeyMenu"""
 from collections import UserDict
-from typing import Union, TypeVar, Type
+from typing import Type, TypeVar, Union
 
 
 class FoodItem:
@@ -16,7 +16,8 @@ class FoodItem:
         recipe: recipe of this food
         emoji: emoji, associated with this food
         type_of_food: general name of this food
-        alt_name: alternative name of food if exists. By default, a class name will be used
+        alt_name: alternative name of food if exists.
+            By default, a class name will be used
     """
 
     recipe: list[str]
@@ -81,7 +82,8 @@ class Pizza(FoodItem):
         return f"{self.__class__.__name__}(size={self.size!r})"
 
     def __eq__(self, other: "Pizza") -> bool:  # type: ignore
-        """Compare pizzas. They will be equal only with the same recipe, size and name"""
+        """Compare pizzas.
+        They will be equal only with the same recipe, size and name"""
         if not isinstance(other, Pizza):
             return NotImplemented
         return (

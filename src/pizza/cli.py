@@ -1,11 +1,11 @@
 """Module with CLI for ordering pizza"""
-import sys
 import os
+import sys
 
-from pizza.pizza_menu import pizza_menu, full_menu_str
-from pizza.business import Restaurant, Client
-from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES
 import click
+
+from pizza.business import Client, Restaurant
+from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES, full_menu_str, pizza_menu
 
 os.environ[
     "LATENCY_ENABLED"
@@ -16,7 +16,6 @@ os.environ[
 def cli():
     """Look at the menu and order your favourite pizzas\n
     Deliver or pick up - you choose!"""
-    pass
 
 
 @cli.command()
@@ -37,7 +36,6 @@ def order(pizza: str, delivery: bool, size: str):
         print("No such pizza on the menu, the available pizzas:")
         print(full_menu_str)
         sys.exit()
-    # CONFUSION: should I catch error about wrong size or condition `size not in list` is enough?
     if size not in AVAILABLE_PIZZA_SIZES:
         print(
             f"size {size} is not available. Choose one from: {AVAILABLE_PIZZA_SIZES}"
