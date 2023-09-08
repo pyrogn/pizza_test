@@ -31,7 +31,7 @@ def menu():
 @click.option("--size", default="L")
 @click.argument("pizza", nargs=1)
 def order(pizza: str, delivery: bool, size: str):
-    """Order a pizza from the menu"""
+    """Order a pizza from the menu. Choose pizza name and size"""
     size = size.upper()
 
     if pizza not in pizza_menu:

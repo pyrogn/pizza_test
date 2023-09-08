@@ -22,7 +22,6 @@ def runner():
 
 def test_menu(runner):
     """Test that cli prints all pizzas from the menu"""
-    # runner = CliRunner()
     result = runner.invoke(cli, ["menu"])
     assert result.exit_code == 0
     assert len(result.output.split("\n")) == 1 + 1 + len(
