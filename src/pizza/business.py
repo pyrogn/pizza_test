@@ -5,7 +5,7 @@ Classes:
 from collections import defaultdict
 
 from pizza.decorators import trace_heavy_tasks
-from pizza.pizza_menu import ResilientMenu, FoodItem, Pizza
+from pizza.pizza_menu import LowerKeyMenu, FoodItem, Pizza
 from pizza.pizza_menu import pizza_menu, Pepperoni
 
 params_for_heavy_tasks_restaurant = {
@@ -43,7 +43,7 @@ class Restaurant:
         _deliver: deliver baked food from a restaurant's _stock to a customer's _stock
     """
 
-    def __init__(self, menu: "ResilientMenu") -> None:
+    def __init__(self, menu: "LowerKeyMenu") -> None:
         """menu: available food to clients
         _stock: _stock of the restaurant with food waiting for pickup,
             where key - Client, value - list of FoodItem

@@ -4,7 +4,8 @@ Classes:
         Pizza
             Pepperoni
             Margherita
-            Hawaiian"""
+            Hawaiian
+    LowerKeyMenu"""
 from collections import UserDict
 from typing import Union, TypeVar, Type
 
@@ -94,8 +95,8 @@ class Pizza(FoodItem):
         return {self.get_name(): self.recipe}
 
 
-class ResilientMenu(UserDict):
-    """Dictionary that is indifferent of registry of the key
+class LowerKeyMenu(UserDict):
+    """Dictionary that is indifferent of case of the key
     It makes lower every key"""
 
     def __init__(self):
@@ -111,7 +112,7 @@ class ResilientMenu(UserDict):
         return super().__contains__(item.lower())
 
 
-pizza_menu = ResilientMenu()
+pizza_menu = LowerKeyMenu()
 
 P = TypeVar("P", bound=Pizza)  # to match subclasses
 
