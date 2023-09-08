@@ -4,7 +4,7 @@ import pytest
 
 from pizza.pizza_menu import pizza_menu
 from pizza.business import Restaurant, Client
-from tests.help_funcs import all_pizzas_parameters, all_types_delivery
+from .help_funcs import all_pizzas_parameters, all_types_delivery
 
 # CONFUSION: I don't know how to persuade PyCharm/mypy to believe that they have this attribute
 Restaurant = Restaurant.__wrapped__  # type: ignore

@@ -2,7 +2,6 @@
 import sys
 import os
 
-# from pizza.exceptions import PizzaSizeException
 from pizza.pizza_menu import pizza_menu, full_menu_str
 from pizza.business import Restaurant, Client
 from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES
