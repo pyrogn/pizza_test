@@ -3,7 +3,7 @@ import functools
 import os
 import random
 import time
-
+from typing import TypedDict
 from pizza.spinner import add_spinner
 
 
@@ -56,8 +56,15 @@ def log_time(str_template: str):
     return outer_wrapper
 
 
+class MsgForParam(TypedDict):
+    """Dict with required keys for tracing heavy tasks"""
+
+    log_time_msg: str
+    start_msg: str
+    end_msg: str
+
+
 MethodName = str
-MsgForParam = dict[str, str]
 
 
 def trace_heavy_tasks(

@@ -4,30 +4,29 @@ Classes:
     Restaurant"""
 from collections import defaultdict
 
-from pizza.decorators import trace_heavy_tasks
+from pizza.decorators import trace_heavy_tasks, MsgForParam
 from pizza.pizza_menu import LowerKeyMenu, FoodItem, Pizza
 from pizza.pizza_menu import pizza_menu, Pepperoni
 
 params_for_heavy_tasks_restaurant = {
-    "bake": {
-        "log_time_msg": "Baking took {:.2f} seconds",
-        "start_msg": "Baking",
-        "end_msg": "👩‍🍳 Baked",
-    },
-    "_deliver": {
-        "log_time_msg": "Delivery took {:.2f} seconds",
-        "start_msg": "Delivering",
-        "end_msg": "🚲 Delivered",
-    },
+    "bake": MsgForParam(
+        log_time_msg="Baking took {:.2f} seconds",
+        start_msg="Baking",
+        end_msg="👩‍🍳 Baked",
+    ),
+    "_deliver": MsgForParam(
+        log_time_msg="Delivery took {:.2f} seconds",
+        start_msg="Delivering",
+        end_msg="🚲 Delivered",
+    ),
 }
 
-
 params_for_heavy_tasks_client = {
-    "_pickup": {
-        "log_time_msg": "Picking up took {:.2f} seconds",
-        "start_msg": "Picking up",
-        "end_msg": "🏎️  Picked up",
-    }
+    "_pickup": MsgForParam(
+        log_time_msg="Picking up took {:.2f} seconds",
+        start_msg="Picking up",
+        end_msg="🏎️  Picked up",
+    )
 }
 
 
