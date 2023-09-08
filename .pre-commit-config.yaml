@@ -28,7 +28,3 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-
-ci:
-  autoupdate_schedule: weekly
-  autoupdate_branch: 'test-task'
