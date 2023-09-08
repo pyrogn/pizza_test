@@ -1,5 +1,6 @@
 """Decorators for adding a delay, spinner and help messages to heavy tasks"""
 import functools
+from functools import reduce
 import os
 import random
 import time
@@ -97,11 +98,13 @@ def trace_heavy_tasks(
             )
             apply_timer = log_time(m_params["log_time_msg"])
 
-            full_mod_method = apply_timer(
-                apply_spinner(
-                    apply_latency(original_method)
-                )  # or loop would be better?
+            func_list = [apply_latency, apply_spinner, apply_timer]
+            full_mod_method = reduce(  # apply every function consecutively to original_method
+                lambda o, func: func(o),
+                func_list,
+                original_method,
             )
+
             setattr(DecClass, method_name, full_mod_method)
         return DecClass
 
