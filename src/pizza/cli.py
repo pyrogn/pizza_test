@@ -1,22 +1,19 @@
 """Module with CLI for ordering pizza"""
-import sys
 import os
+import sys
 
-from pizza.pizza_menu import pizza_menu, full_menu_str
-from pizza.business import Restaurant, Client
-from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES
 import click
 
-os.environ[
-    "LATENCY_ENABLED"
-] = "1"  # enable latency only in cli mode and this doesn't look good
+from pizza.business import Client, Restaurant
+from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES, full_menu_str, pizza_menu
+
+os.environ["LATENCY_ENABLED"] = "1"  # enable latency only in cli mode and this doesn't look good
 
 
 @click.group()
 def cli():
     """Look at the menu and order your favourite pizzas\n
     Deliver or pick up - you choose!"""
-    pass
 
 
 @cli.command()
@@ -39,9 +36,7 @@ def order(pizza: str, delivery: bool, size: str):
         sys.exit()
     # CONFUSION: should I catch error about wrong size or condition `size not in list` is enough?
     if size not in AVAILABLE_PIZZA_SIZES:
-        print(
-            f"size {size} is not available. Choose one from: {AVAILABLE_PIZZA_SIZES}"
-        )
+        print(f"size {size} is not available. Choose one from: {AVAILABLE_PIZZA_SIZES}")
         sys.exit()
 
     restaurant = Restaurant(pizza_menu)

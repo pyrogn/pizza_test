@@ -4,21 +4,22 @@ default_language_version:
   python: python3.11
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
+    -   id: check-toml
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.0.287
+    hooks:
+    -   id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
 -   repo: https://github.com/psf/black
     rev: 23.7.0
     hooks:
       - id: black
-        # It is recommended to specify the latest version of Python
-        # supported by your project here, or alternatively use
-        # pre-commit's default_language_version, see
-        # https://pre-commit.com/#top_level-default_language_version
-#        language_version: python3.11
 -   repo: local
     hooks:
       - id: pytest-check
@@ -27,3 +28,7 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+
+ci:
+  autoupdate_schedule: weekly
+  autoupdate_branch: 'test-task'

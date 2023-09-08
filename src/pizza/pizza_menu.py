@@ -7,7 +7,7 @@ Classes:
             Hawaiian
     LowerKeyMenu"""
 from collections import UserDict
-from typing import Union, TypeVar, Type
+from typing import Type, TypeVar, Union
 
 
 class FoodItem:
@@ -22,9 +22,7 @@ class FoodItem:
     recipe: list[str]
     emoji: str
     type_of_food: str
-    alt_name: Union[
-        str, None
-    ] = None  # make an option for _name != __class__.__name__
+    alt_name: Union[str, None] = None  # make an option for _name != __class__.__name__
     is_baked: bool = False
 
 
@@ -145,10 +143,7 @@ class Hawaiian(Pizza):
 
 # full menu as a single multiline string
 full_menu_str = (
-    "\n".join(
-        f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
-        for v in pizza_menu.values()
-    )
+    "\n".join(f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}" for v in pizza_menu.values())
     + f"\nAvailable pizza sizes: {', '.join(AVAILABLE_PIZZA_SIZES)}"
 )
 
