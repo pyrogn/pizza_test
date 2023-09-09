@@ -91,7 +91,7 @@ def trace_heavy_tasks(
         class DecClass(cls):
             pass
 
-        for method_name in params.keys():
+        for method_name in params:
             original_method = getattr(cls, method_name)
             m_params = params[method_name]
 

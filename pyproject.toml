@@ -45,10 +45,15 @@ exclude = '''
   | dist
 )/
 '''
+
 [tool.ruff]
 # Same as Black.
 line-length = 85
 src = ['src', 'tests']
-select = ["E", "F", "C4", "COM", "D1", "UP", "PT"]
+select = ["E", "F", "C4", "COM", "D1", "UP", "PT", "SIM", "SLF001"]
 ignore = []
 fixable = ["ALL"]
+
+[tool.ruff.per-file-ignores]
+# To access private attribute
+"tests/**/*.py" = ["SLF001"]
