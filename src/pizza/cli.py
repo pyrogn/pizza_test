@@ -28,7 +28,7 @@ def menu():
 @click.option("--delivery", default=False, is_flag=True)
 @click.option("--size", default="L")
 @click.argument("pizza", nargs=1)
-def order(pizza: str, delivery: bool, size: str):
+def order(pizza: str, *, delivery: bool, size: str):
     """Order a pizza from the menu. Choose pizza name and size"""
     size = size.upper()
 
