@@ -36,9 +36,10 @@ def test_pizza_order(is_delivery):
     No pizza left in a restaurant for him"""
     restaurant = Restaurant(pizza_menu)
     client = Client(is_delivery=is_delivery, restaurant=restaurant)
-    client.order("Pepperoni")
-    client.order("Pepperoni")
-    assert len(client._stock) == 2
+    n_orders = 2
+    for _ in range(n_orders):
+        client.order("Pepperoni")
+    assert len(client._stock) == n_orders
     assert len(restaurant._stock) == 0
     assert all(pizza.is_baked is True for pizza in client._stock)
 
