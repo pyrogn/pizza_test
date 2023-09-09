@@ -7,7 +7,7 @@ Classes:
             Hawaiian
     LowerKeyMenu"""
 from collections import UserDict
-from typing import Type, TypeVar, Union
+from typing import TypeVar
 
 
 class FoodItem:
@@ -23,10 +23,7 @@ class FoodItem:
     recipe: list[str]
     emoji: str
     type_of_food: str
-    alt_name: Union[
-        str,
-        None,
-    ] = None  # make an option for _name != __class__.__name__
+    alt_name: str | None = None  # make an option for _name != __class__.__name__
     is_baked: bool = False
 
 
@@ -56,7 +53,8 @@ class Pizza(FoodItem):
         Raises:
             ValueError: if size is not available"""
         if size.upper() not in AVAILABLE_PIZZA_SIZES:
-            raise ValueError(f"{size} size not in {AVAILABLE_PIZZA_SIZES}")
+            string_error = f"{size} size not in {AVAILABLE_PIZZA_SIZES}"
+            raise ValueError(string_error)
         self.size = size
 
     def bake(self) -> None:
@@ -131,7 +129,7 @@ pizza_menu = LowerKeyMenu()
 P = TypeVar("P", bound=Pizza)  # to match subclasses
 
 
-def add_pizza_to_menu(cls: Type[P]) -> Type[P]:
+def add_pizza_to_menu(cls: type[P]) -> type[P]:
     """Add pizza to a dict after every definition
     Alternative - using Pizza.__subclasses__()"""
     pizza_menu[cls.get_name()] = cls
