@@ -20,7 +20,7 @@ class FoodItem:
     recipe: tuple[str, ...]
     emoji: str
     type_of_food: str
-    alt_name: str | None = None  # make an option for _name != __class__.__name__
+    alt_name: str | None = None
     is_baked: bool = False
 
 
@@ -164,18 +164,19 @@ class Hawaiian(Pizza):
 
 def validate_pizza(
     pizza_name: str,
-    size: str = "L",
+    size: str,
 ) -> tuple[bool, str]:
     """Validate if pizza with parameters exists and return log message.
 
     Attributes:
-        pizza_name - pizza name from the menu
-        size - size from the available sizes
+        pizza_name:  pizza name from the menu
+        size:  size from the available sizes
 
     Returns:
-        is_success (bool) - True if no error, else False
-        message - if there's an error, message is meaningful text error
-            if it is not an error, it will contain pizza name, emoji and size.
+        A tuple with two values
+            is_success (bool) - True if no error, else False
+            message - if there's an error, message is meaningful text error
+                if it is not an error, it will contain pizza name, emoji and size.
     """
     size = size.upper()
     if size not in AVAILABLE_PIZZA_SIZES:
