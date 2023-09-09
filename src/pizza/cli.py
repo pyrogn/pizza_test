@@ -32,6 +32,9 @@ def order(pizza: str, delivery: bool, size: str):
     """Order a pizza from the menu. Choose pizza name and size"""
     size = size.upper()
 
+    # I am worried that pizza is a leaking abstraction
+    # I think cli should know nothing about specifics of pizza
+    # Except maybe common PizzaError with parameters
     if pizza not in pizza_menu:
         print("No such pizza on the menu, the available pizzas:")
         print(full_menu_str)
