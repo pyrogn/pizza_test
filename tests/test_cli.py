@@ -2,6 +2,7 @@
 Tests are very basic and might be improved by exact matching
 """
 import os
+
 import pytest
 from click.testing import CliRunner
 
@@ -40,7 +41,7 @@ def test_pizza_order(is_delivery, pizza_class, runner):
     )
     result = runner.invoke(cli, params_cli)
     assert result.exit_code == 0
-    assert len(result.output.split("\n")) == 4
+    assert len(result.output.split("\n")) == 4  # noqa # magic value
 
 
 @all_pizzas_parameters
@@ -53,7 +54,7 @@ def test_pizza_wrong_size(pizza_class, runner):
         ["order", pizza_name, "--size", "definitely_unknown_size"],
     )
     assert result.exit_code == 0
-    assert len(result.output.split("\n")) == 2
+    assert len(result.output.split("\n")) == 2  # noqa # magic value
 
 
 @all_types_delivery
