@@ -24,6 +24,8 @@ def spin(start_msg: str, end_msg: str, done: Event) -> None:
 
 
 def add_spinner(start_msg: str, end_msg: str):
+    """Function decorator for applying spin function to a long action"""
+
     def outer_wrapper(fn):
         @functools.wraps(fn)
         def inner_wrapper(self, *args, **kwargs) -> int:
