@@ -24,7 +24,8 @@ class FoodItem:
     emoji: str
     type_of_food: str
     alt_name: Union[
-        str, None
+        str,
+        None,
     ] = None  # make an option for _name != __class__.__name__
     is_baked: bool = False
 

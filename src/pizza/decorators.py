@@ -22,14 +22,16 @@ def add_latency(fn):
         seconds_sleep = 0
         # CONFUSION: I am not sure if it is a good way to read some global defaults
         is_latency_enabled = os.getenv(
-            "LATENCY_ENABLED", "0"
+            "LATENCY_ENABLED",
+            "0",
         )  # if 1 - latency added (cli), if 0 - no latency (everything else)
 
         if is_latency_enabled == "1":
             smoothness = 1000
             # imitate uniform distribution without numpy
             seconds_sleep = random.randint(
-                min_ms * smoothness, max_ms * smoothness
+                min_ms * smoothness,
+                max_ms * smoothness,
             ) / (1000 * smoothness)
 
         time.sleep(seconds_sleep)

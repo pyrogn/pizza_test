@@ -31,7 +31,7 @@ params_for_heavy_tasks_client = {
         log_time_msg="Picking up took {:.2f} seconds",
         start_msg="Picking up",
         end_msg="🏎️  Picked up",
-    )
+    ),
 }
 
 
