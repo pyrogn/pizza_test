@@ -100,13 +100,6 @@ class Client:
         add_to_stock: adds food to client's stock
         order: orders food from the restaurant
         _pickup: client picks up his food from the restaurant
-    Attributes:
-        name: name of customer for identification
-        phone_number: phone number of customer for identification
-        restaurant: instance of restaurant to which the client is linked
-        is_delivery (bool): if True restaurant will deliver food,
-            if False - food needs to be picked up by yourself
-        _stock: list which contains and collects food items for this client
     """
 
     def __init__(
@@ -116,6 +109,16 @@ class Client:
         name: str = "Pavel",
         phone_number: str = "+1337",
     ) -> None:
+        """Initialization of Restaurant
+        Attributes:
+            name: name of customer for identification
+            phone_number: phone number of customer for identification
+            restaurant: instance of restaurant to which the client is linked
+            is_delivery (bool): if True restaurant will deliver food,
+                if False - food needs to be picked up by yourself
+        Added attributes:
+            _stock: list which contains and collects food items for this client
+        """
         self.name = name
         self.phone_number = phone_number
         self.restaurant = restaurant

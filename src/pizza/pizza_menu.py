@@ -50,6 +50,11 @@ class Pizza(FoodItem):
     type_of_food = "pizza"
 
     def __init__(self, size="L") -> None:
+        """Initialize Pizza
+        Attributes:
+            size: size of pizza
+        Raises:
+            ValueError: if size is not available"""
         if size.upper() not in AVAILABLE_PIZZA_SIZES:
             raise ValueError(f"{size} size not in {AVAILABLE_PIZZA_SIZES}")
         self.size = size
@@ -74,12 +79,14 @@ class Pizza(FoodItem):
         return ", ".join(list(cls.recipe))
 
     def __str__(self) -> str:
+        """Description of pizza instance"""
         return (
-            f"{self.__class__.__name__} {self.type_of_food}, "
+            f"{self.__class__.get_name()} {self.type_of_food}, "
             f"Size: {self.size}, Is baked: {self.is_baked}"
         )
 
     def __repr__(self) -> str:
+        """Repr of pizza with original parameters. It will not be baked"""
         return f"{self.__class__.__name__}(size={self.size!r})"
 
     def __eq__(self, other: "Pizza") -> bool:  # type: ignore
@@ -103,15 +110,19 @@ class LowerKeyMenu(UserDict):
     It makes lower every key"""
 
     def __init__(self):
+        """Initialize UserDict"""
         super().__init__()
 
     def __getitem__(self, item: str):
+        """Key should be string and it is converted to lower"""
         return super().__getitem__(item.lower())
 
     def __setitem__(self, key: str, value):
+        """Key is str and will be lower"""
         return super().__setitem__(key.lower(), value)
 
     def __contains__(self, item: str):  # type: ignore
+        """Item is converted to lower"""
         return super().__contains__(item.lower())
 
 
@@ -129,18 +140,24 @@ def add_pizza_to_menu(cls: Type[P]) -> Type[P]:
 
 @add_pizza_to_menu
 class Margherita(Pizza):
+    """Margherita Pizza"""
+
     recipe = ["tomato sauce", "mozzarella", "tomatoes"]
     emoji = "🧀"
 
 
 @add_pizza_to_menu
 class Pepperoni(Pizza):
+    """Pepperoni Pizza"""
+
     recipe = ["tomato sauce", "mozzarella", "pepperoni"]
     emoji = "🍕"
 
 
 @add_pizza_to_menu
 class Hawaiian(Pizza):
+    """Hawaiian Special pizza"""
+
     recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
     emoji = "🍍"
     alt_name = "Hawaiian Special"  # Give a complex name for a test
@@ -156,12 +173,12 @@ full_menu_str = (
 )
 
 if __name__ == "__main__":
-    pepperoni = Pepperoni()
-    print(pepperoni.__repr__())
-    print(pepperoni)
-    pepperoni.bake()
-    print(pepperoni)
-    print(pepperoni.dict())
+    pizza = Hawaiian()
+    print(pizza.__repr__())
+    print(pizza)
+    pizza.bake()
+    print(pizza)
+    print(pizza.dict())
     print(full_menu_str)
     try:
         print(Pepperoni(size="s"))
