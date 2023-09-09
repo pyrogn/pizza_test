@@ -80,12 +80,12 @@ class Restaurant:
         food = self._retrieve_from_stock(client)
         return food
 
-    def make_order(self, pizza_name, client: "Client", is_delivery=False) -> None:
+    def make_order(self, pizza_name, client: "Client", *, is_delivery=False) -> None:
         """Process order of food by a client"""
         pizza = self.menu[pizza_name]()
         pizza = self.bake(pizza)
         self._add_to_stock(client, pizza)
-        if is_delivery:
+        if is_delivery:  # it might be a boolean trap, should fix that
             self._deliver(client)
 
     def _deliver(self, client: "Client") -> None:
@@ -105,6 +105,7 @@ class Client:
     def __init__(
         self,
         restaurant: Restaurant,
+        *,
         is_delivery: bool,
         name: str = "Pavel",
         phone_number: str = "+1337",
@@ -159,4 +160,5 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=True)
     client.order("Pepperoni")
     client.order("Pepperoni")
-    # print(Restaurant.__wrapped__)
+    print(Restaurant.__mro__)
+    print(Restaurant.__wrapped__.__mro__)
