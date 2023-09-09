@@ -155,7 +155,7 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=False)
     client.order("Pepperoni")
     client.order("Pepperoni")
-    print(client._stock)
+    print(client._stock)  # noqa: SLF001
     client = Client(restaurant=restaurant, is_delivery=True)
     client.order("Pepperoni")
     client.order("Pepperoni")
