@@ -2,7 +2,7 @@ name: Build and Test
 run-name: Pytest
 on: [push]
 jobs:
-  PyTest-GitHub-Actions:
+  pytest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
