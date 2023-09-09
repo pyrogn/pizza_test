@@ -55,3 +55,7 @@ def order(pizza: str, delivery: bool, size: str):
     )
     # All logic with order and delivery is inside this method
     client.order(pizza)
+
+
+if __name__ == "__main__":
+    cli()
