@@ -49,6 +49,6 @@ exclude = '''
 # Same as Black.
 line-length = 85
 src = ['src', 'tests']
-select = ["E", "F", "C4", "COM", "D1", "UP"]
+select = ["E", "F", "C4", "COM", "D1", "UP", "PT"]
 ignore = []
 fixable = ["ALL"]

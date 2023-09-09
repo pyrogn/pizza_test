@@ -56,8 +56,9 @@ def test_different_pizza(pizza_class):
 @all_pizzas_parameters
 def test_unknown_size_pizza(pizza_class):
     """If size is unknown then ValueError is raised"""
-    with pytest.raises(ValueError):
-        pizza_class(size="definitely_unknown_size")
+    unk_size = "definitely_unknown_size"
+    with pytest.raises(ValueError, match=rf"{unk_size} size is not in.*"):
+        pizza_class(size=unk_size)
 
 
 def test_pizza_order_diff_clients():
