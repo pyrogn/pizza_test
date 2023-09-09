@@ -53,7 +53,7 @@ class Pizza(FoodItem):
         Raises:
             ValueError: if size is not available"""
         if size.upper() not in AVAILABLE_PIZZA_SIZES:
-            string_error = f"{size} size not in {AVAILABLE_PIZZA_SIZES}"
+            string_error = f"{size} size is not in {AVAILABLE_PIZZA_SIZES}"
             raise ValueError(string_error)
         self.size = size
 
