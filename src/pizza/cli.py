@@ -41,7 +41,8 @@ def order(pizza: str, delivery: bool, size: str):
         sys.exit()
     if size not in AVAILABLE_PIZZA_SIZES:
         print(
-            f"size {size} is not available. Choose one from: {AVAILABLE_PIZZA_SIZES}"
+            f"size {size} is not available. "
+            f"Choose one from: {AVAILABLE_PIZZA_SIZES}",
         )
         sys.exit()
 

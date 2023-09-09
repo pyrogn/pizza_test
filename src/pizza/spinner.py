@@ -18,7 +18,8 @@ def spin(start_msg: str, end_msg: str, done: Event) -> None:
         if done.wait(0.1):  # waits for done to be True
             break
     print(
-        f"\r{end_msg}! ", end=""
+        f"\r{end_msg}! ",
+        end="",
     )  # print success pizza_size rewriting previous msg
 
 
@@ -28,11 +29,14 @@ def add_spinner(start_msg: str, end_msg: str):
         def inner_wrapper(self, *args, **kwargs) -> int:
             done = Event()
             spinner = Thread(
-                target=spin, args=(start_msg, end_msg, done)
+                target=spin,
+                args=(start_msg, end_msg, done),
             )  # create new thread
             spinner.start()  # start a second thread
             result = fn(
-                self, *args, **kwargs
+                self,
+                *args,
+                **kwargs,
             )  # time.sleep inside the function will block main thread
             # and release GIL
             done.set()  # going to stop spin
