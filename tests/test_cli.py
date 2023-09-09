@@ -13,7 +13,7 @@ from .help_funcs import all_pizzas_parameters, all_types_delivery
 os.environ["LATENCY_ENABLED"] = "0"
 
 
-@pytest.fixture
+@pytest.fixture()
 def runner():
     """Create CliRunner for pizza app"""
     return CliRunner()
