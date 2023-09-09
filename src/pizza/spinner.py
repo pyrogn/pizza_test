@@ -1,16 +1,19 @@
-"""Adds spinner for long tasks. Inspiration came from the book Fluent Python"""
+"""Adds spinner for long tasks. Inspiration came from the book Fluent Python."""
 import functools
 import itertools
 from threading import Event, Thread
 
 
 def spin(start_msg: str, end_msg: str, done: Event) -> None:
-    """Cycle dashes forever until the other thread don't change the Event
+    """Cycle dashes forever until the other thread don't change the Event.
+
     First will be printed start_msg with a spinner
     After Event is True end_msg printed in the same line, replacing start_msg
-    :param start_msg: pizza_size printed in the start and until the finish
-    :param end_msg: pizza_size printed in the end
-    :param done: when Event is True, spinner finishes and prints end_msg
+
+    Args:
+        start_msg: pizza_size printed in the start and until the finish
+        end_msg: pizza_size printed in the end
+        done: when Event is True, spinner finishes and prints end_msg.
     """
     for char in itertools.cycle(r"\|/-"):
         status = f"\r {char} {start_msg}"
@@ -24,7 +27,7 @@ def spin(start_msg: str, end_msg: str, done: Event) -> None:
 
 
 def add_spinner(start_msg: str, end_msg: str):
-    """Function decorator for applying spin function to a long action"""
+    """Function decorator for applying spin function to a long action."""
 
     def outer_wrapper(fn):
         @functools.wraps(fn)

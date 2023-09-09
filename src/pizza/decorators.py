@@ -1,4 +1,4 @@
-"""Decorators for adding a delay, spinner and help messages to heavy tasks"""
+"""Decorators for adding a delay, spinner and help messages to heavy tasks."""
 import functools
 import os
 import random
@@ -10,10 +10,12 @@ from pizza.spinner import add_spinner
 
 
 def add_latency(fn):
-    """Add random latency to a class method to simulate real work
+    """Add random latency to a class method to simulate real work.
+
     Latency is distributed uniformly
     min_ms: minimum latency in ms
-    max_ms: maximum latency in ms"""
+    max_ms: maximum latency in ms.
+    """
     min_ms = 150
     max_ms = 3_000
 
@@ -41,9 +43,13 @@ def add_latency(fn):
 
 
 def log_time(str_template: str):
-    """Log and print time spent in the function call
-    str_template: string with placeholder to insert time spent in function
-        Example: Delivery took {:.2f} seconds"""
+    """Log and print time spent in the function call.
+
+    Args:
+        str_template: string with placeholder to insert time spent in function
+
+    Usage example: Delivery took {:.2f} seconds.
+    """
 
     def outer_wrapper(fn):
         @functools.wraps(fn)
@@ -60,7 +66,7 @@ def log_time(str_template: str):
 
 
 class MsgForParam(TypedDict):
-    """Dict with required keys for tracing heavy tasks"""
+    """Dict with required keys for tracing heavy tasks."""
 
     log_time_msg: str
     start_msg: str
@@ -73,17 +79,20 @@ MethodName = str
 def trace_heavy_tasks(
     params: dict[MethodName, MsgForParam],
 ):
-    """Decorate a class adding functionality to selected methods
+    """Decorate a class adding functionality to selected methods.
+
     added functionality:
         synthetic latency
         spinner during task execution
         time logging
-    parameters:
+
+    Args:
         params: dict with key=method_name, value - map of keyword and text
-        required keywords:
-            start_msg: Message while running
-            end_msg: Message at the finish
-            log_time_msg: String with placeholder to log time"""
+            keywords:
+                start_msg: Message while running
+                end_msg: Message at the finish
+                log_time_msg: String with placeholder to log time.
+    """
 
     def wrapper(cls):
         @functools.wraps(cls, updated=())

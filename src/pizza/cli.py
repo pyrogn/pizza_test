@@ -1,4 +1,4 @@
-"""Module with CLI for ordering pizza"""
+"""Module with CLI for ordering pizza."""
 import os
 import sys
 
@@ -15,12 +15,13 @@ os.environ[
 @click.group()
 def cli():
     """Look at the menu and order your favourite pizzas\n
-    Deliver or pick up - you choose!"""
+    Deliver or pick up - you choose!
+    """
 
 
 @cli.command()
 def menu():
-    """Print available food"""
+    """Print available food."""
     print(full_menu_str)
 
 
@@ -29,7 +30,7 @@ def menu():
 @click.option("--size", default="L")
 @click.argument("pizza", nargs=1)
 def order(pizza: str, *, delivery: bool, size: str):
-    """Order a pizza from the menu. Choose pizza name and size"""
+    """Order a pizza from the menu. Choose pizza name and size."""
     is_success, message = validate_pizza(pizza_name=pizza, size=size)
     if not is_success:
         print(message)
