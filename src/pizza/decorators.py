@@ -35,8 +35,7 @@ def add_latency(fn):
             ) / (1000 * smoothness)
 
         time.sleep(seconds_sleep)
-        result = fn(self, *args, **kwargs)
-        return result
+        return fn(self, *args, **kwargs)
 
     return wrapper
 

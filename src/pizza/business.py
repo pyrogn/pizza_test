@@ -77,8 +77,7 @@ class Restaurant:
 
     def pickup(self, client: "Client") -> list[FoodItem]:
         """Give food to client who wants to pick up by himself"""
-        food = self._retrieve_from_stock(client)
-        return food
+        return self._retrieve_from_stock(client)
 
     def make_order(self, pizza_name, client: "Client", *, is_delivery=False) -> None:
         """Process order of food by a client"""
@@ -146,8 +145,7 @@ class Client:
 
     def _pickup(self) -> list[FoodItem]:
         """Pickup all ordered food from a restaurant"""
-        food = self.restaurant.pickup(self)
-        return food
+        return self.restaurant.pickup(self)
 
 
 if __name__ == "__main__":
