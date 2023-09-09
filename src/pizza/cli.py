@@ -5,7 +5,7 @@ import sys
 import click
 
 from pizza.business import Client, Restaurant
-from pizza.pizza_menu import Pizza, full_menu_str, pizza_menu
+from pizza.pizza_menu import full_menu_str, pizza_menu, validate_pizza
 
 os.environ[
     "LATENCY_ENABLED"
@@ -30,16 +30,14 @@ def menu():
 @click.argument("pizza", nargs=1)
 def order(pizza: str, *, delivery: bool, size: str):
     """Order a pizza from the menu. Choose pizza name and size"""
-    ordered_pizza, is_success, message = Pizza.safe_init(pizza_name=pizza, size=size)
+    is_success, message = validate_pizza(pizza_name=pizza, size=size)
     if not is_success:
         print(message)
         sys.exit()
 
     restaurant = Restaurant(pizza_menu)
     client = Client(restaurant=restaurant, is_delivery=delivery)
-
     print("You want to order", message)
-    # All logic with order and delivery is inside this method
     client.order(pizza)
 
 
