@@ -7,6 +7,7 @@ from pizza.pizza_menu import pizza_menu
 
 from .help_funcs import all_pizzas_parameters, all_types_delivery
 
+# reveal_type(Restaurant)
 # CONFUSION: I don't know how to persuade PyCharm/mypy
 # to believe that they have this attribute
 Restaurant = Restaurant.__wrapped__  # type: ignore
