@@ -5,7 +5,7 @@ import sys
 import click
 
 from pizza.business import Client, Restaurant
-from pizza.pizza_menu import AVAILABLE_PIZZA_SIZES, full_menu_str, pizza_menu
+from pizza.pizza_menu import Pizza, full_menu_str, pizza_menu
 
 os.environ[
     "LATENCY_ENABLED"
@@ -30,33 +30,15 @@ def menu():
 @click.argument("pizza", nargs=1)
 def order(pizza: str, *, delivery: bool, size: str):
     """Order a pizza from the menu. Choose pizza name and size"""
-    size = size.upper()
-
-    # I am worried that pizza is a leaking abstraction
-    # I think cli should know nothing about specifics of pizza
-    # Except maybe common PizzaError with parameters
-    if pizza not in pizza_menu:
-        print("No such pizza on the menu, the available pizzas:")
-        print(full_menu_str)
-        sys.exit()
-    if size not in AVAILABLE_PIZZA_SIZES:
-        print(
-            f"size {size} is not available. "
-            f"Choose one from: {AVAILABLE_PIZZA_SIZES}",
-        )
+    ordered_pizza, is_success, message = Pizza.safe_init(pizza_name=pizza, size=size)
+    if not is_success:
+        print(message)
         sys.exit()
 
     restaurant = Restaurant(pizza_menu)
     client = Client(restaurant=restaurant, is_delivery=delivery)
 
-    ordered_pizza = pizza_menu[pizza](size=size)
-
-    print(
-        "You want to order",
-        ordered_pizza.get_name(),
-        ordered_pizza.emoji,
-        f"{size} size",
-    )
+    print("You want to order", message)
     # All logic with order and delivery is inside this method
     client.order(pizza)
 
