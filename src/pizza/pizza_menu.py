@@ -20,7 +20,7 @@ class FoodItem:
             By default, a class name will be used
     """
 
-    recipe: list[str]
+    recipe: tuple[str, ...]
     emoji: str
     type_of_food: str
     alt_name: str | None = None  # make an option for _name != __class__.__name__
@@ -98,7 +98,7 @@ class Pizza(FoodItem):
             & (self.size == other.size)
         )
 
-    def dict(self) -> dict[str, list[str]]:
+    def dict(self) -> dict[str, tuple[str, ...]]:
         """Return dictionary with key=name of pizza, value=recipe of pizza"""
         return {self.get_name(): self.recipe}
 
@@ -140,7 +140,7 @@ def add_pizza_to_menu(cls: type[P]) -> type[P]:
 class Margherita(Pizza):
     """Margherita Pizza"""
 
-    recipe = ["tomato sauce", "mozzarella", "tomatoes"]
+    recipe = ("tomato sauce", "mozzarella", "tomatoes")
     emoji = "🧀"
 
 
@@ -148,7 +148,7 @@ class Margherita(Pizza):
 class Pepperoni(Pizza):
     """Pepperoni Pizza"""
 
-    recipe = ["tomato sauce", "mozzarella", "pepperoni"]
+    recipe = ("tomato sauce", "mozzarella", "pepperoni")
     emoji = "🍕"
 
 
@@ -156,7 +156,7 @@ class Pepperoni(Pizza):
 class Hawaiian(Pizza):
     """Hawaiian Special pizza"""
 
-    recipe = ["tomato sauce", "mozzarella", "chicken", "pineapples"]
+    recipe = ("tomato sauce", "mozzarella", "chicken", "pineapples")
     emoji = "🍍"
     alt_name = "Hawaiian Special"  # Give a complex name for a test
 
