@@ -7,7 +7,7 @@ Classes:
             Hawaiian
     LowerKeyMenu"""
 from collections import UserDict
-from typing import TypeVar
+from typing import Optional, TypeVar
 
 
 class FoodItem:
@@ -56,6 +56,41 @@ class Pizza(FoodItem):
             string_error = f"{size} size is not in {AVAILABLE_PIZZA_SIZES}"
             raise ValueError(string_error)
         self.size = size
+
+    @classmethod
+    def safe_init(
+        cls,
+        pizza_name: str,
+        size: str = "L",
+    ) -> tuple[Optional["Pizza"], bool, str]:
+        """Safe init of Pizza subclasses
+        You will get only correct instance or no instance in case of any error
+        Attributes:
+            pizza_name - pizza name from the menu
+            size - size from the available sizes
+        Returns:
+            Pizza subclass instance or None in case of error
+            is_success (bool) - True if no error, else False
+            message - if there's an error, message=meaningful text error
+                if it is not an error, it will contain pizza name, emoji and size
+        CONFUSED: I am not sure if this is the right design to encapsulate logic
+        """
+        size = size.upper()
+        if size not in AVAILABLE_PIZZA_SIZES:
+            message = (
+                f"size {size} is not available. "
+                f"Choose one from: {AVAILABLE_PIZZA_SIZES}"
+            )
+            return None, False, message
+        if pizza_name not in pizza_menu:
+            message = (
+                f"No such pizza on the menu, the available pizzas:\n{full_menu_str}"
+            )
+            return None, False, message
+
+        cls_pizza = pizza_menu[pizza_name]
+        message = f"{cls_pizza.get_name()} {cls_pizza.emoji} {size} size"
+        return cls_pizza(size=size), True, message
 
     def bake(self) -> None:
         """Make pizza bake itself
