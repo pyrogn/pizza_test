@@ -1,1 +1,1 @@
-"""Pizza package"""
+"""Pizza package."""

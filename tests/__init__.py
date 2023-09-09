@@ -1,1 +1,1 @@
-"""Tests for business logic and cli app"""
+"""Tests for business logic and cli app."""
