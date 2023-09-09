@@ -84,7 +84,7 @@ class Restaurant:
         pizza = self.menu[pizza_name]()
         pizza = self.bake(pizza)
         self._add_to_stock(client, pizza)
-        if is_delivery:  # it might be a boolean trap, should fix that
+        if is_delivery:
             self._deliver(client)
 
     def _deliver(self, client: "Client") -> None:
