@@ -40,7 +40,7 @@ def test_pizza_order(is_delivery):
     client.order("Pepperoni")
     assert len(client._stock) == 2
     assert len(restaurant._stock) == 0
-    assert all([pizza.is_baked is True for pizza in client._stock])
+    assert all(pizza.is_baked is True for pizza in client._stock)
 
 
 @all_pizzas_parameters

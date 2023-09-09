@@ -70,7 +70,7 @@ class Pizza(FoodItem):
     @classmethod
     def get_clean_recipe(cls) -> str:
         """Return recipe of pizza as ingredients separated by comma"""
-        return ", ".join([ingredient for ingredient in cls.recipe])
+        return ", ".join(list(cls.recipe))
 
     def __str__(self) -> str:
         return (
