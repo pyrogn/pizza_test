@@ -17,8 +17,9 @@ https://github.com/pyrogn/pizza_test/assets/60060559/36dbf444-d156-475e-8243-03c
 5. `. .venv/bin/activate`
 6. For usage: `python -m pip install .`
 7. For development:
-   1. `pdm install`
-   2. `pre-commit install`
+   1. Install pdm: locally: `pip install --user pdm` or globally: [docs](https://pdm.fming.dev/latest/#recommended-installation-method)
+   2. `pdm install`
+   3. `pre-commit install`
 
 ## How to use
 
