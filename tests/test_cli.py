@@ -2,7 +2,6 @@
 
 Tests are very basic and might be improved by exact matching.
 """
-import functools
 import os
 
 import pytest
@@ -20,7 +19,6 @@ os.environ["LATENCY_ENABLED"] = "0"
 def runner():
     """Factory for a function to run CliRunner."""
 
-    @functools.wraps(runner)
     def cli_run(args: list[str]) -> tuple[int, list[str]]:
         """Run CliRunner for pizza app with required args.
 
