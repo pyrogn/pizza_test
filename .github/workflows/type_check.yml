@@ -11,8 +11,7 @@ jobs:
           python-version: '3.11'
       - name: Installation dependencies
         run: |
-          python -m pip install .
-          python -m pip install mypy pytest
+          python -m pip install '.[type,test]'
       - name: Type checks
         run: mypy ./src ./tests
   pyright:
@@ -23,8 +22,6 @@ jobs:
         with:
           python-version: '3.11'
       - name: Installation dependencies
-        run: |
-          python -m pip install .
-          python -m pip install pyright pytest
+        run: python -m pip install '.[type,test]'
       - name: Type checks
         run: pyright ./src ./tests
