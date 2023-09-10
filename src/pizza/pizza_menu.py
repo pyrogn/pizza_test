@@ -113,7 +113,7 @@ class LowerKeyMenu(UserDict):
         """Key should be string and it is converted to lower case."""
         return super().__getitem__(item.lower())
 
-    def __setitem__(self, key: str, value) -> None:
+    def __setitem__(self, key: str, value: type[Pizza]) -> None:
         """Key is str and will be lowered."""
         return super().__setitem__(key.lower(), value)
 
