@@ -24,7 +24,7 @@ class FoodItem:
     is_baked: bool = False
 
 
-AVAILABLE_PIZZA_SIZES = ["L", "XL"]
+AVAILABLE_PIZZA_SIZES: list[str] = ["L", "XL"]
 
 
 class Pizza(FoodItem):
@@ -35,7 +35,7 @@ class Pizza(FoodItem):
         size: size of pizza (L or XL).
     """
 
-    type_of_food = "pizza"
+    type_of_food: str = "pizza"
 
     def __init__(self, size="L") -> None:
         """Initialize Pizza with size.
@@ -59,7 +59,7 @@ class Pizza(FoodItem):
     # CONFUSION: can we make dynamic attribute (like property) for a class?
     @classmethod
     def get_name(cls) -> str:
-        """Infer name from the class or get alt_name if provided."""
+        """Infer name from the class or alt_name if provided and return it."""
         if not cls.alt_name:
             return cls.__mro__[0].__name__.title()
         return cls.alt_name.title()
@@ -105,26 +105,25 @@ class LowerKeyMenu(UserDict):
     It makes lower every key.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize UserDict."""
         super().__init__()
 
-    def __getitem__(self, item: str):
-        """Key should be string and it is converted to lower."""
+    def __getitem__(self, item: str) -> type[Pizza]:
+        """Key should be string and it is converted to lower case."""
         return super().__getitem__(item.lower())
 
-    def __setitem__(self, key: str, value):
-        """Key is str and will be lower."""
+    def __setitem__(self, key: str, value) -> None:
+        """Key is str and will be lowered."""
         return super().__setitem__(key.lower(), value)
 
-    def __contains__(self, item: str):  # type: ignore
-        """Item is converted to lower."""
+    def __contains__(self, item: str) -> bool:  # type: ignore
+        """Item is converted to lower case."""
         return super().__contains__(item.lower())
 
 
 pizza_menu = LowerKeyMenu()
-
-P = TypeVar("P", bound=Pizza)  # to match subclasses
+P = TypeVar("P", bound=Pizza)  # to match subclasses of Pizza
 
 
 def add_pizza_to_menu(cls: type[P]) -> type[P]:
@@ -197,7 +196,7 @@ def validate_pizza(
 
 
 # full menu as a single multiline string
-full_menu_str = (
+full_menu_str: str = (
     "\n".join(
         f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
         for v in pizza_menu.values()

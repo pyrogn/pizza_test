@@ -3,13 +3,14 @@ import functools
 import os
 import random
 import time
+from collections.abc import Callable
 from functools import reduce
 from typing import TypedDict
 
 from pizza.spinner import add_spinner
 
 
-def add_latency(fn):
+def add_latency(fn) -> Callable:
     """Add random latency to a class method to simulate real work.
 
     Latency is distributed uniformly
@@ -42,7 +43,7 @@ def add_latency(fn):
     return wrapper
 
 
-def log_time(str_template: str):
+def log_time(str_template: str) -> Callable:
     """Log and print time spent in the function call.
 
     Args:
@@ -51,7 +52,7 @@ def log_time(str_template: str):
     Usage example: Delivery took {:.2f} seconds.
     """
 
-    def outer_wrapper(fn):
+    def outer_wrapper(fn) -> Callable:
         @functools.wraps(fn)
         def wrapper(self, *args, **kwargs):
             time_start = time.time()
@@ -76,9 +77,7 @@ class MsgForParam(TypedDict):
 MethodName = str
 
 
-def trace_heavy_tasks(
-    params: dict[MethodName, MsgForParam],
-):
+def trace_heavy_tasks(params: dict[MethodName, MsgForParam]) -> Callable:
     """Decorate a class adding functionality to selected methods.
 
     added functionality:

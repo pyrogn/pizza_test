@@ -13,14 +13,14 @@ os.environ[
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """Look at the menu and order your favourite pizzas\n
     Deliver or pick up - you choose!
     """
 
 
 @cli.command()
-def menu():
+def menu() -> None:
     """Print available food."""
     print(full_menu_str)
 
@@ -29,7 +29,7 @@ def menu():
 @click.option("--delivery", default=False, is_flag=True)
 @click.option("--size", default="L")
 @click.argument("pizza", nargs=1)
-def order(pizza: str, *, delivery: bool, size: str):
+def order(pizza: str, *, delivery: bool, size: str) -> None:
     """Order a pizza from the menu. Choose pizza name and size."""
     is_success, message = validate_pizza(pizza_name=pizza, size=size)
     if not is_success:
