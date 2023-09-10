@@ -13,7 +13,7 @@ https://github.com/pyrogn/pizza_test/assets/60060559/36dbf444-d156-475e-8243-03c
 1. `git clone https://github.com/pyrogn/pizza_test.git`
 2. `cd pizza`
 3. If master is empty: `git switch test-task`
-4. `virtualenv .venv`
+4. `virtualenv .venv` or `python3 -m venv .venv`
 5. `. .venv/bin/activate`
 6. For usage: `python -m pip install .`
 7. For development:
