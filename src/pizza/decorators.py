@@ -7,7 +7,7 @@ from collections.abc import Callable
 from functools import reduce
 from typing import Any, TypedDict
 
-from pizza.constants import TEST_LATENCY_MS
+from pizza.constants import MAX_LATENCY_MS, MIN_LATENCY_MS, TEST_LATENCY_MS
 from pizza.spinner import add_spinner
 
 
@@ -25,8 +25,8 @@ def add_latency(fn) -> Callable:
                 for test purposes
         """
 
-        min_ms = 150
-        max_ms = 3_000
+        min_ms = MIN_LATENCY_MS
+        max_ms = MAX_LATENCY_MS
 
         if os.getenv("LATENCY_ENABLED", "0") == "1":
             if os.getenv("LATENCY_FOR_TEST", "0") == "1":

@@ -1,4 +1,7 @@
 """Constants for the project"""
+MIN_LATENCY_MS = 150
+MAX_LATENCY_MS = 3_000
+
 # Latency duration for testing
 TEST_LATENCY_MS = 5
 TEST_LATENCY_S = TEST_LATENCY_MS / 1000
