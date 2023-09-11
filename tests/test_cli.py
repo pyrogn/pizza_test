@@ -8,6 +8,14 @@ import pytest
 from click.testing import CliRunner
 
 from pizza.cli import cli
+from pizza.constants import (
+    INFO_LINES,
+    INFO_MESSAGE_WRONG_PIZZA_LINES,
+    NUM_ACTIONS_LINES,
+    PIZZA_SIZES_LINES,
+    TEST_LATENCY_S,
+)
+from pizza.decorators import LogTimeDecorator
 from pizza.pizza_menu import pizza_menu
 
 from .help_funcs import all_pizzas_parameters, all_types_delivery
@@ -38,14 +46,15 @@ def runner():
     return cli_run
 
 
-PIZZA_SIZES_LINES = 1  # extra line under menu about pizza sizes available
-INFO_LINES = 1  # info back to user what he orders
-INFO_MESSAGE_WRONG_PIZZA_LINES = 1
+@pytest.fixture(name="enable_latency")
+def _set_env_vars_for_latency():
+    """Make latency smaller but still test that it exists"""
+    os.environ["LATENCY_ENABLED"] = "1"
+    os.environ["LATENCY_FOR_TEST"] = "1"
 
 
 def test_menu(runner):
     """Test that cli prints all pizzas from the menu."""
-    # result = runner.invoke(cli, ["menu"])
     exit_code, split_result = runner(["menu"])
     assert exit_code == 0
     assert len(split_result) == PIZZA_SIZES_LINES + len(
@@ -56,15 +65,23 @@ def test_menu(runner):
 @all_types_delivery
 @all_pizzas_parameters
 def test_pizza_order(is_delivery, pizza_class, runner):
-    """Test that you can order pizzas and output matches target number of rows."""
+    """Usual order of all pizzas and all types of delivery
+
+    1. No latency added to actions
+    2. Exit code = success
+    3. Number of lines as expected
+    """
     pizza_name = pizza_class.get_name()
     params_cli = (
         ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
     )
-    exit_code, split_result = runner(params_cli)
-    num_actions = 2  # bake + deliver/pick up
+    (exit_code, split_result), execution_time = LogTimeDecorator()(runner)(
+        args=params_cli,
+    )
+
+    assert execution_time < TEST_LATENCY_S  # without latency, it is about .5 ms
     assert exit_code == 0
-    assert len(split_result) == INFO_LINES + num_actions
+    assert len(split_result) == INFO_LINES + NUM_ACTIONS_LINES
 
 
 @all_pizzas_parameters
@@ -90,3 +107,17 @@ def test_pizza_incorrect_order(is_delivery, runner):
     assert len(split_result) == PIZZA_SIZES_LINES + INFO_LINES + len(
         pizza_menu,
     )
+
+
+# testing all combinations might be unnecessary
+@all_pizzas_parameters
+@all_types_delivery
+@pytest.mark.usefixtures("enable_latency")
+def test_latency_exists(pizza_class, is_delivery, runner):
+    """Test that latency is applied to heavy tasks"""
+    pizza_name = pizza_class.get_name()
+    params_cli = (
+        ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
+    )
+    _, execution_time = LogTimeDecorator()(runner)(args=params_cli)
+    assert execution_time > TEST_LATENCY_S

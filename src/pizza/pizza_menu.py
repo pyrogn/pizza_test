@@ -5,6 +5,8 @@ Module defines pizza classes and collects them into custom dict
 from collections import UserDict
 from typing import TypeVar
 
+from pizza.constants import AVAILABLE_PIZZA_SIZES
+
 
 class FoodItem:
     """Super class for all food items.
@@ -22,9 +24,6 @@ class FoodItem:
     type_of_food: str
     alt_name: str | None = None
     is_baked: bool = False
-
-
-AVAILABLE_PIZZA_SIZES: list[str] = ["L", "XL"]
 
 
 class Pizza(FoodItem):
