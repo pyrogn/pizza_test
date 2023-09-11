@@ -72,7 +72,7 @@ class Pizza(FoodItem):
         return cls.alt_name.title()
 
     @classproperty
-    def get_clean_recipe(cls) -> str:
+    def clean_recipe(cls) -> str:
         """Return recipe of pizza as ingredients separated by comma."""
         return ", ".join(list(cls.recipe))
 
@@ -205,7 +205,7 @@ def validate_pizza(
 # full menu as a single multiline string
 full_menu_str: str = (
     "\n".join(
-        f"- {v.name} {v.emoji} : {v.get_clean_recipe}" for v in pizza_menu.values()
+        f"- {v.name} {v.emoji} : {v.clean_recipe}" for v in pizza_menu.values()
     )
     + f"\nAvailable pizza sizes: {', '.join(AVAILABLE_PIZZA_SIZES)}"
 )
