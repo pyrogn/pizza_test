@@ -26,12 +26,21 @@ class FoodItem:
     is_baked: bool = False
 
 
+class classproperty:  # noqa: D101
+    def __init__(self, fget):  # noqa: D107
+        self.fget = fget
+
+    def __get__(self, instance, owner):  # noqa: D105
+        return self.fget(owner)
+
+
 class Pizza(FoodItem):
     """Specialization of food - pizza.
 
     Attributes:
         is_baked (bool): is pizza baked, or it is a template
         size: size of pizza (L or XL).
+        name: name of pizza (alt_name or from class name)
     """
 
     type_of_food: str = "pizza"
@@ -55,15 +64,14 @@ class Pizza(FoodItem):
         if not self.is_baked:
             self.is_baked = True
 
-    # CONFUSION: can we make dynamic attribute (like property) for a class?
-    @classmethod
-    def get_name(cls) -> str:
+    @classproperty
+    def name(cls) -> str:
         """Infer name from the class or alt_name if provided and return it."""
         if not cls.alt_name:
-            return cls.__mro__[0].__name__.title()
+            return cls.__name__.title()
         return cls.alt_name.title()
 
-    @classmethod
+    @classproperty
     def get_clean_recipe(cls) -> str:
         """Return recipe of pizza as ingredients separated by comma."""
         return ", ".join(list(cls.recipe))
@@ -71,7 +79,7 @@ class Pizza(FoodItem):
     def __str__(self) -> str:
         """Description of pizza instance."""
         return (
-            f"{self.__class__.get_name()} {self.type_of_food}, "
+            f"{self.__class__.name} {self.type_of_food}, "
             f"Size: {self.size}, Is baked: {self.is_baked}"
         )
 
@@ -88,13 +96,13 @@ class Pizza(FoodItem):
             return NotImplemented
         return (
             (set(self.recipe) == set(other.recipe))
-            & (self.get_name == other.get_name)
+            & (self.name == other.name)
             & (self.size == other.size)
         )
 
     def dict(self) -> dict[str, tuple[str, ...]]:
         """Return dictionary with key=name of pizza, value=recipe of pizza."""
-        return {self.get_name(): self.recipe}
+        return {self.name: self.recipe}
 
 
 class LowerKeyMenu(UserDict):
@@ -131,7 +139,7 @@ def add_pizza_to_menu(cls: type[P]) -> type[P]:
     Add pizza to a dict after every definition as a side effect
     Alternative - using Pizza.__subclasses__().
     """
-    pizza_menu[cls.get_name()] = cls
+    pizza_menu[cls.name] = cls
     return cls
 
 
@@ -190,20 +198,22 @@ def validate_pizza(
         return False, message
 
     cls_pizza = pizza_menu[pizza_name]
-    message = f"{cls_pizza.get_name()} {cls_pizza.emoji} {size} size"
+    message = f"{cls_pizza.name} {cls_pizza.emoji} {size} size"
     return True, message
 
 
 # full menu as a single multiline string
 full_menu_str: str = (
     "\n".join(
-        f"- {v.get_name()} {v.emoji} : {v.get_clean_recipe()}"
-        for v in pizza_menu.values()
+        f"- {v.name} {v.emoji} : {v.get_clean_recipe}" for v in pizza_menu.values()
     )
     + f"\nAvailable pizza sizes: {', '.join(AVAILABLE_PIZZA_SIZES)}"
 )
 
 if __name__ == "__main__":
+    pizza = Pepperoni()
+    print(pizza.__repr__())
+    print(pizza)
     pizza = Hawaiian()
     print(pizza.__repr__())
     print(pizza)

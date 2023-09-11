@@ -126,8 +126,8 @@ def trace_heavy_tasks(params: dict[MethodName, MsgForParam]) -> Callable:
                     original_method,
                 )
             )
-
             setattr(DecClass, method_name, full_mod_method)
+
         return DecClass
 
     return wrapper

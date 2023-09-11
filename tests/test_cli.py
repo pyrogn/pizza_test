@@ -71,7 +71,7 @@ def test_pizza_order(is_delivery, pizza_class, runner):
     2. Exit code = success
     3. Number of lines as expected
     """
-    pizza_name = pizza_class.get_name()
+    pizza_name = pizza_class.name
     params_cli = (
         ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
     )
@@ -87,7 +87,7 @@ def test_pizza_order(is_delivery, pizza_class, runner):
 @all_pizzas_parameters
 def test_pizza_wrong_size(pizza_class, runner):
     """Test that program don't crash on unknown pizza size."""
-    pizza_name = pizza_class.get_name()
+    pizza_name = pizza_class.name
     exit_code, split_result = runner(
         ["order", pizza_name, "--size", "definitely_unknown_size"],
     )
@@ -115,7 +115,7 @@ def test_pizza_incorrect_order(is_delivery, runner):
 @pytest.mark.usefixtures("enable_latency")
 def test_latency_exists(pizza_class, is_delivery, runner):
     """Test that latency is applied to heavy tasks"""
-    pizza_name = pizza_class.get_name()
+    pizza_name = pizza_class.name
     params_cli = (
         ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
     )
