@@ -68,7 +68,7 @@ class Pizza(FoodItem):
     def name(cls) -> str:
         """Infer name from the class or alt_name if provided and return it."""
         if not cls.alt_name:
-            return cls.__name__.title()
+            return cls.__name__.title()  # type: ignore
         return cls.alt_name.title()
 
     @classproperty
@@ -211,9 +211,9 @@ full_menu_str: str = (
 )
 
 if __name__ == "__main__":
-    pizza = Pepperoni()
-    print(pizza.__repr__())
-    print(pizza)
+    pizza2 = Pepperoni()
+    print(pizza2.__repr__())
+    print(pizza2)
     pizza = Hawaiian()
     print(pizza.__repr__())
     print(pizza)
