@@ -2,21 +2,18 @@
 import pytest
 
 from pizza.business import Client, Restaurant
-from pizza.pizza_menu import pizza_menu
+from pizza.pizza_menu import Pizza, pizza_menu
 
 from .help_funcs import all_pizzas_parameters, all_types_delivery
 
-# reveal_type(Restaurant)
 # CONFUSION: I don't know how to persuade linter
 # to believe that they have this attribute
 Restaurant = Restaurant.__wrapped__  # type: ignore
 Client = Client.__wrapped__  # type: ignore
 
 
-# CONFUSION: can we provide type hint for pizza_class?
-# because linters don't recognize pizza_class as Pizza
 @all_pizzas_parameters
-def test_pizza_equality(pizza_class):
+def test_pizza_equality(pizza_class: type[Pizza]):
     """Test equality and inequality of the same pizza."""
     assert pizza_class() == pizza_class()
     assert pizza_class(size="XL") != pizza_class(size="L")
@@ -30,7 +27,7 @@ def test_pizza_inequality():
 
 
 @all_types_delivery
-def test_pizza_order(is_delivery):
+def test_pizza_order(is_delivery: bool):  # noqa: FBT001
     """Test that client ordered 2 pizzas, has 2 pizzas in his _stock.
 
     And pizzas are baked
@@ -47,7 +44,7 @@ def test_pizza_order(is_delivery):
 
 
 @all_pizzas_parameters
-def test_different_pizza(pizza_class):
+def test_different_pizza(pizza_class: type[Pizza]):
     """Test that pizzas can be baked and they're pizzas indeed."""
     pizza = pizza_class()
     assert pizza.type_of_food == "pizza"
@@ -57,7 +54,7 @@ def test_different_pizza(pizza_class):
 
 
 @all_pizzas_parameters
-def test_unknown_size_pizza(pizza_class):
+def test_unknown_size_pizza(pizza_class: type[Pizza]):
     """If size is unknown then ValueError is raised."""
     unk_size = "definitely_unknown_size"
     with pytest.raises(ValueError, match=rf"{unk_size} size is not in.*"):
