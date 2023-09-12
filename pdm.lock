@@ -6,7 +6,7 @@ groups = ["default", "dev", "test", "type", "lint"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:137d2880ea7f03de7555d9615388bd1ff4f5127128fc5ca2bde758d9ad25cf63"
+content_hash = "sha256:15e3d6e4d030070e66af7a3e319ee7503c5fa9bc334dfabbca7361d239af218a"
 
 [[package]]
 name = "black"
@@ -228,6 +228,19 @@ dependencies = [
 files = [
     {file = "pytest-7.4.2-py3-none-any.whl", hash = "sha256:1d881c6124e08ff0a1bb75ba3ec0bfd8b5354a01c194ddd5a0a870a48d99b002"},
     {file = "pytest-7.4.2.tar.gz", hash = "sha256:a766259cfab564a2ad52cb1aae1b881a75c3eb7e34ca3779697c23ed47c47069"},
+]
+
+[[package]]
+name = "pytest-timeout"
+version = "2.1.0"
+requires_python = ">=3.6"
+summary = "pytest plugin to abort hanging tests"
+dependencies = [
+    "pytest>=5.0.0",
+]
+files = [
+    {file = "pytest-timeout-2.1.0.tar.gz", hash = "sha256:c07ca07404c612f8abbe22294b23c368e2e5104b521c1790195561f37e1ac3d9"},
+    {file = "pytest_timeout-2.1.0-py3-none-any.whl", hash = "sha256:f6f50101443ce70ad325ceb4473c4255e9d74e3c7cd0ef827309dfa4c0d975c6"},
 ]
 
 [[package]]
