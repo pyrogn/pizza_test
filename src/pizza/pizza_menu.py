@@ -65,11 +65,10 @@ class Pizza(FoodItem):
             self.is_baked = True
 
     @classproperty
-    def name(cls) -> str:
+    def name(cls: "Pizza") -> str:
         """Infer name from the class or alt_name if provided and return it."""
-        if not cls.alt_name:
-            return cls.__name__.title()  # type: ignore
-        return cls.alt_name.title()
+        pizza_name = cls.alt_name or cls.__name__  # type: ignore
+        return pizza_name.title()
 
     @classproperty
     def clean_recipe(cls) -> str:
