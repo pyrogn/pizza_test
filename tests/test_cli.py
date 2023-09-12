@@ -64,6 +64,7 @@ def test_menu(runner):
 
 @all_types_delivery
 @all_pizzas_parameters
+@pytest.mark.timeout(TEST_LATENCY_S)  # set upper boundary for latency
 def test_pizza_order(is_delivery, pizza_class, runner):
     """Usual order of all pizzas and all types of delivery
 
@@ -113,6 +114,7 @@ def test_pizza_incorrect_order(is_delivery, runner):
 @all_pizzas_parameters
 @all_types_delivery
 @pytest.mark.usefixtures("enable_latency")
+@pytest.mark.timeout(TEST_LATENCY_S * 10)  # test is no longer than 10x latency
 def test_latency_exists(pizza_class, is_delivery, runner):
     """Test that latency is applied to heavy tasks"""
     pizza_name = pizza_class.name

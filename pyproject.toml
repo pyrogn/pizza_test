@@ -18,6 +18,7 @@ pizza = "pizza.cli:cli"
 [project.optional-dependencies]
 test = [
     "pytest>=7.4.2",
+    "pytest-timeout>=2.1.0",
 ]
 type = [
     "mypy>=1.5.1",
