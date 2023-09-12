@@ -5,31 +5,34 @@ import random
 import time
 from collections.abc import Callable
 from functools import reduce
-from typing import TypedDict
+from typing import Any, TypedDict
 
+from pizza.constants import MAX_LATENCY_MS, MIN_LATENCY_MS, TEST_LATENCY_MS
 from pizza.spinner import add_spinner
 
 
 def add_latency(fn) -> Callable:
-    """Add random latency to a class method to simulate real work.
-
-    Latency is distributed uniformly
-    min_ms: minimum latency in ms
-    max_ms: maximum latency in ms.
-    """
-    min_ms = 150
-    max_ms = 3_000
+    """Add random latency to a class method to simulate real work."""
 
     @functools.wraps(fn)
     def wrapper(self, *args, **kwargs):
-        seconds_sleep = 0
-        # CONFUSION: I am not sure if it is a good way to read some global defaults
-        is_latency_enabled = os.getenv(
-            "LATENCY_ENABLED",
-            "0",
-        )  # if 1 - latency added (cli), if 0 - no latency (everything else)
+        """Run function and add random latency from uniform distribution.
 
-        if is_latency_enabled == "1":
+        min_ms: minimum latency in ms
+        max_ms: maximum latency in ms
+        If LATENCY_ENABLED=0, then don't add latency
+            If LATENCY_FOR_TEST=1, then set min_ms, max_ms as LATENCY_FOR_TEST
+                for test purposes
+        """
+
+        min_ms = MIN_LATENCY_MS
+        max_ms = MAX_LATENCY_MS
+
+        if os.getenv("LATENCY_ENABLED", "0") == "1":
+            if os.getenv("LATENCY_FOR_TEST", "0") == "1":
+                min_ms = TEST_LATENCY_MS
+                max_ms = TEST_LATENCY_MS
+
             smoothness = 1000
             # imitate uniform distribution without numpy
             seconds_sleep = random.randint(
@@ -37,33 +40,42 @@ def add_latency(fn) -> Callable:
                 max_ms * smoothness,
             ) / (1000 * smoothness)
 
-        time.sleep(seconds_sleep)
+            time.sleep(seconds_sleep)
+
         return fn(self, *args, **kwargs)
 
     return wrapper
 
 
-def log_time(str_template: str) -> Callable:
-    """Log and print time spent in the function call.
+class LogTimeDecorator:
+    """Decorator to track and log time of function execution"""
 
-    Args:
-        str_template: string with placeholder to insert time spent in function
+    def __init__(self, str_template: str = "") -> None:
+        """Initialization decorator with parameters
 
-    Usage example: Delivery took {:.2f} seconds.
-    """
+        Args:
+            str_template: string with placeholder to insert time spent in function
+            Usage example: Delivery took {:.2f} seconds.
+            If provided, then print it, else: do not print
+        """
+        self.str_template = str_template
 
-    def outer_wrapper(fn) -> Callable:
+    def __call__(self, fn: Callable) -> Callable:
+        """Decorate provided function"""
+
         @functools.wraps(fn)
-        def wrapper(self, *args, **kwargs):
+        def log_time(*args: Any, **kwargs: Any) -> tuple[Any, float]:
+            """Execute function with custom parameters"""
+
             time_start = time.time()
-            result = fn(self, *args, **kwargs)
-            lapsed_time = time.time() - time_start
-            print(str_template.format(lapsed_time), end="\n")
-            return result
+            result = fn(*args, **kwargs)
+            time_end = time.time()
+            execution_time = time_end - time_start
+            if self.str_template:
+                print(self.str_template.format(execution_time), end="\n")
+            return result, execution_time
 
-        return wrapper
-
-    return outer_wrapper
+        return log_time
 
 
 class MsgForParam(TypedDict):
@@ -104,7 +116,7 @@ def trace_heavy_tasks(params: dict[MethodName, MsgForParam]) -> Callable:
 
             apply_latency = add_latency
             apply_spinner = add_spinner(m_params["start_msg"], m_params["end_msg"])
-            apply_timer = log_time(m_params["log_time_msg"])
+            apply_timer = LogTimeDecorator(m_params["log_time_msg"])
 
             func_list = [apply_latency, apply_spinner, apply_timer]
             full_mod_method = (
@@ -114,8 +126,8 @@ def trace_heavy_tasks(params: dict[MethodName, MsgForParam]) -> Callable:
                     original_method,
                 )
             )
-
             setattr(DecClass, method_name, full_mod_method)
+
         return DecClass
 
     return wrapper
