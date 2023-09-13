@@ -1,8 +1,10 @@
 """Tests for CLI application.
 
-Tests are very basic and might be improved by exact matching.
+Tests cover successful running program or graceful shutdown
+Also exact matching has been implemented , so tests should evolve accordingly
 """
 import os
+from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
@@ -53,6 +55,11 @@ def _set_env_vars_for_latency():
     os.environ["LATENCY_FOR_TEST"] = "1"
 
 
+def open_exp_stdout(filename: str):
+    """Read file with expected output"""
+    return open(Path("tests") / "match_output" / (filename + ".txt"))  # noqa: SIM115
+
+
 def test_menu(runner):
     """Test that cli prints all pizzas from the menu."""
     exit_code, split_result = runner(["menu"])
@@ -60,11 +67,16 @@ def test_menu(runner):
     assert len(split_result) == PIZZA_SIZES_LINES + len(
         pizza_menu,
     )
+    with open_exp_stdout("menu") as f:
+        for act_line, exp_line in zip(split_result, f.readlines()):
+            # VERY RIGID TEST!!!
+            exp_line = exp_line.strip()
+            assert act_line == exp_line
 
 
 @all_types_delivery
 @all_pizzas_parameters
-@pytest.mark.timeout(TEST_LATENCY_S)  # set upper boundary for latency
+@pytest.mark.timeout(TEST_LATENCY_S)  # set upper boundary for speed execution
 def test_pizza_order(is_delivery, pizza_class, runner):
     """Usual order of all pizzas and all types of delivery
 
@@ -83,6 +95,17 @@ def test_pizza_order(is_delivery, pizza_class, runner):
     assert execution_time < TEST_LATENCY_S  # without latency, it is about .5 ms
     assert exit_code == 0
     assert len(split_result) == INFO_LINES + NUM_ACTIONS_LINES
+    with open_exp_stdout("delivery") as f:
+        for line in f.readlines():
+            line = line.strip()
+            fline = line.format(
+                pizza_name,
+                pizza_class.emoji,
+                pizza_class().size,  # only checked default size unfortunately
+            )
+            assert split_result[0] == fline
+            break
+            # TODO: Add regex matching for next rows
 
 
 @all_pizzas_parameters

@@ -1,0 +1,4 @@
+- Margherita 🧀 : tomato sauce, mozzarella, tomatoes
+- Pepperoni 🍕 : tomato sauce, mozzarella, pepperoni
+- Hawaiian Special 🍍 : tomato sauce, mozzarella, chicken, pineapples
+Available pizza sizes: L, XL
