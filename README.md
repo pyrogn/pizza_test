@@ -28,6 +28,17 @@ https://github.com/pyrogn/pizza_test/assets/60060559/36dbf444-d156-475e-8243-03c
 3. `pizza order <pizza name> --delivery` order a pizza and get delivery
 4. `pizza order <pizza name> --delivery --size L` choose pizza size
 
+# Diagrams
+
+> [!WARNING]
+> **Не является точкой правды, но помогает понять абстракции** Я ещё учусь красиво рисовать
+
+### Sequence diagram
+![sequence diagram](./pictures/order_pizza_sequence.drawio.svg)
+
+### Class diagram
+![class diagram](./pictures/class_diagram.svg)
+
 ## TODO
 * [x] Add pre-commit hooks for pytest and black,isort
 * [x] Add pytest checks to GitHub Actions
