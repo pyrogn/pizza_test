@@ -5,3 +5,4 @@
 /**/.idea/*
 ./src/pizza.egg-info/**/*
 **/__pycache__/**/*
+/pictures/.$*.bkp
