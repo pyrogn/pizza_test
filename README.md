@@ -30,11 +30,13 @@ https://github.com/pyrogn/pizza_test/assets/60060559/36dbf444-d156-475e-8243-03c
 
 # Diagrams
 
-[!WARNING]
-**Не является точкой правды, но помогает понять абстрации** Я ещё учусь красиво рисовать
+> [!WARNING]
+> **Не является точкой правды, но помогает понять абстрации** Я ещё учусь красиво рисовать
 
+### Sequence diagram
 ![sequence diagram](./pictures/order_pizza_sequence.drawio.svg)
 
+### Class diagram
 ![class diagram](./pictures/class_diagram.svg)
 
 ## TODO
