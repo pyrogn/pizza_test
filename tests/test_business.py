@@ -2,7 +2,8 @@
 import pytest
 
 from pizza.business import Client, Restaurant
-from pizza.pizza_menu import Pizza, pizza_menu
+from pizza.constants import AVAILABLE_PIZZA_SIZES
+from pizza.pizza_menu import Pizza, pizza_menu, validate_pizza
 
 from .help_funcs import all_pizzas_parameters, all_types_delivery
 
@@ -10,6 +11,10 @@ from .help_funcs import all_pizzas_parameters, all_types_delivery
 # to believe that they have this attribute
 Restaurant = Restaurant.__wrapped__  # type: ignore
 Client = Client.__wrapped__  # type: ignore
+
+# To take random first actual values if they don't matter
+first_pizza_name = next(iter(pizza_menu.values())).name
+first_pizza_size = AVAILABLE_PIZZA_SIZES[0]
 
 
 @all_pizzas_parameters
@@ -37,7 +42,7 @@ def test_pizza_order(is_delivery: bool):  # noqa: FBT001
     client = Client(is_delivery=is_delivery, restaurant=restaurant)
     n_orders = 2
     for _ in range(n_orders):
-        client.order("Pepperoni")
+        client.order(first_pizza_name)
     assert len(client._stock) == n_orders
     assert len(restaurant._stock) == 0
     assert all(pizza.is_baked is True for pizza in client._stock)
@@ -59,6 +64,23 @@ def test_unknown_size_pizza(pizza_class: type[Pizza]):
     unk_size = "definitely_unknown_size"
     with pytest.raises(ValueError, match=rf"{unk_size} size is not in.*"):
         pizza_class(size=unk_size)
+
+
+def test_pizza_validation():
+    """Test that validation func don't allow incorrect pizza names and sizes"""
+    known_pizza = first_pizza_name
+    known_size = first_pizza_size
+    unk_pizza = "definitely_unknown_pizza"
+    unk_size = "definitely_unknown_size"
+    test_cases = {
+        (known_pizza, known_size): True,
+        (unk_pizza, known_size): False,
+        (known_pizza, unk_size): False,
+        (unk_pizza, unk_size): False,
+    }
+    for case, result in test_cases.items():
+        flag, _ = validate_pizza(pizza_name=case[0], size=case[1])
+        assert flag is result
 
 
 def test_pizza_order_diff_clients():
