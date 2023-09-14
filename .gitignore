@@ -6,3 +6,4 @@
 ./src/pizza.egg-info/**/*
 **/__pycache__/**/*
 /pictures/.$*.bkp
+/pictures/.$order_pizza_sequence.drawio.svg.dtmp
