@@ -14,7 +14,7 @@ from pizza.pizza_menu import (
 )
 
 params_for_heavy_tasks_restaurant = {
-    "bake": MsgForParam(
+    "_bake": MsgForParam(
         log_time_msg="Baking took {:.2f} seconds",
         start_msg="Baking",
         end_msg="👩‍🍳 Baked",
@@ -55,7 +55,7 @@ class Restaurant:
         self.menu = menu
         self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
 
-    def bake(self, pizza: Pizza) -> Pizza:
+    def _bake(self, pizza: Pizza) -> Pizza:
         """Bake pizza and return it.
 
         Takes pizza and makes it baked.
@@ -75,14 +75,20 @@ class Restaurant:
         del self._stock[client]
         return items
 
-    def pickup(self, client: "Client") -> list[FoodItem]:
+    def give_food(self, client: "Client") -> list[FoodItem]:
         """Give food to client who wants to pick up by himself."""
         return self._retrieve_from_stock(client)
 
-    def make_order(self, pizza_name, client: "Client", *, is_delivery=False) -> None:
-        """Process order of food by a client."""
+    def process_order(
+        self,
+        pizza_name,
+        client: "Client",
+        *,
+        is_delivery: bool = False,
+    ) -> None:
+        """Process order of food by a client and optionally deliver it"""
         pizza = self.menu[pizza_name]()
-        pizza = self.bake(pizza)
+        pizza = self._bake(pizza)
         self._add_to_stock(client, pizza)
         if is_delivery:
             self._deliver(client)
@@ -139,31 +145,31 @@ class Client:
         for item in items:
             self._stock.append(item)
 
-    def order(self, pizza_name: str) -> None:
-        """Make an order for food in a restaurant.
+    def make_order(self, pizza_name: str) -> None:
+        """Make an order for food in a restaurant. And get that food.
 
         If is_delivery=True then wait for delivery
         If is_delivery=False then pick up by yourself.
         """
-        self.restaurant.make_order(pizza_name, self, is_delivery=self.is_delivery)
+        self.restaurant.process_order(pizza_name, self, is_delivery=self.is_delivery)
         if not self.is_delivery:
             food = self._pickup()
             self.add_to_stock(food)
 
     def _pickup(self) -> list[FoodItem]:
         """Pickup all ordered food from a restaurant."""
-        return self.restaurant.pickup(self)
+        return self.restaurant.give_food(self)
 
 
 if __name__ == "__main__":
     restaurant = Restaurant(pizza_menu)
     a = Pepperoni()
     client = Client(restaurant=restaurant, is_delivery=False)
-    client.order("Pepperoni")
-    client.order("Pepperoni")
+    client.make_order("Pepperoni")
+    client.make_order("Pepperoni")
     print(client._stock)  # noqa
     client = Client(restaurant=restaurant, is_delivery=True)
-    client.order("Pepperoni")
-    client.order("Pepperoni")
+    client.make_order("Pepperoni")
+    client.make_order("Pepperoni")
     print(Restaurant.__mro__)
     print(Restaurant.__wrapped__.__mro__)  # type: ignore
