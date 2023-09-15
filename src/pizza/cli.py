@@ -7,14 +7,12 @@ import click
 from pizza.business import Client, Restaurant
 from pizza.pizza_menu import full_menu_str, pizza_menu, validate_pizza
 
-os.environ[
-    "LATENCY_ENABLED"
-] = "1"  # enable latency only in cli mode and this doesn't look good
+os.environ["LATENCY_ENABLED"] = "1"  # enable latency only in cli mode
 
 
 @click.group()
 def cli() -> None:
-    """Look at the menu and order your favourite pizzas\n
+    """Look at the menu and order your favourite pizzas.
     Deliver or pick up - you choose!
     """
 
@@ -39,7 +37,7 @@ def order(pizza: str, *, delivery: bool, size: str) -> None:
     restaurant = Restaurant(pizza_menu)
     client = Client(restaurant=restaurant, is_delivery=delivery)
     print("You want to order", message)
-    client.order(pizza)
+    client.make_order(pizza)
 
 
 if __name__ == "__main__":
