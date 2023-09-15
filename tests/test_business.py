@@ -42,7 +42,7 @@ def test_pizza_order(is_delivery: bool):  # noqa: FBT001
     client = Client(is_delivery=is_delivery, restaurant=restaurant)
     n_orders = 2
     for _ in range(n_orders):
-        client.order(first_pizza_name)
+        client.make_order(first_pizza_name)
     assert len(client._stock) == n_orders
     assert len(restaurant._stock) == 0
     assert all(pizza.is_baked is True for pizza in client._stock)
@@ -91,8 +91,8 @@ def test_pizza_order_diff_clients():
     restaurant = Restaurant(pizza_menu)
     client1 = Client(name="PP1", is_delivery=True, restaurant=restaurant)
     client2 = Client(name="PP2", is_delivery=False, restaurant=restaurant)
-    client1.order("Pepperoni")
-    client2.order("Pepperoni")
+    client1.make_order("Pepperoni")
+    client2.make_order("Pepperoni")
     assert client1 != client2
     assert len(restaurant._stock) == 0
     assert len(client1._stock) == 1
