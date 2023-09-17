@@ -1,4 +1,9 @@
-"""Decorators for adding a delay, spinner and help messages to heavy tasks."""
+"""Decorators for adding a delay, spinner and help messages to heavy tasks.
+
+I think it is better to apply decorators directly to methods,
+but also check global variable. Current implementation is unnecessary convoluted
+and unpythonic (because of procedural generation methods using setattr, getattr).
+"""
 import functools
 import os
 import random
@@ -50,15 +55,18 @@ def add_latency(fn) -> Callable:
 class LogTimeDecorator:
     """Decorator to track and log time of function execution"""
 
-    def __init__(self, str_template: str = "") -> None:
+    def __init__(self, str_template: str = "", *, is_return_time: bool) -> None:
         """Initialization decorator with parameters
 
         Args:
             str_template: string with placeholder to insert time spent in function
-            Usage example: Delivery took {:.2f} seconds.
-            If provided, then print it, else: do not print
+                Usage example: Delivery took {:.2f} seconds.
+                If provided, then print it, else: do not print
+            is_return_time:
+                if true, add time as a second return value
         """
         self.str_template = str_template
+        self.is_return_time = is_return_time
 
     def __call__(self, fn: Callable) -> Callable:
         """Decorate provided function"""
@@ -73,7 +81,9 @@ class LogTimeDecorator:
             execution_time = time_end - time_start
             if self.str_template:
                 print(self.str_template.format(execution_time), end="\n")
-            return result, execution_time
+            if self.is_return_time:
+                return result, execution_time
+            return result
 
         return log_time
 
@@ -116,7 +126,10 @@ def trace_heavy_tasks(params: dict[MethodName, MsgForParam]) -> Callable:
 
             apply_latency = add_latency
             apply_spinner = add_spinner(m_params["start_msg"], m_params["end_msg"])
-            apply_timer = LogTimeDecorator(m_params["log_time_msg"])
+            apply_timer = LogTimeDecorator(
+                m_params["log_time_msg"],
+                is_return_time=False,
+            )
 
             func_list = [apply_latency, apply_spinner, apply_timer]
             full_mod_method = (

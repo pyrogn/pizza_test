@@ -6,7 +6,6 @@ from collections import defaultdict
 
 from pizza.decorators import MsgForParam, trace_heavy_tasks
 from pizza.pizza_menu import (
-    FoodItem,
     LowerKeyMenu,
     Pepperoni,
     Pizza,
@@ -42,18 +41,18 @@ class Restaurant:
     Attributes:
         menu: available food to clients
         _stock: _stock of the restaurant with food waiting for pickup,
-            where key - Client, value - list of FoodItem.
+            where key - Client, value - list of Pizza.
     """
 
-    def __init__(self, menu: "LowerKeyMenu") -> None:
+    def __init__(self, menu: LowerKeyMenu) -> None:
         """Initialization of restaurant with the menu.
 
         menu: available food to clients
         _stock: _stock of the restaurant with food waiting for pickup,
-            where key - Client, value - list of FoodItem.
+            where key - Client, value - list of Pizza.
         """
         self.menu = menu
-        self._stock: defaultdict[Client, list[FoodItem]] = defaultdict(list)
+        self._stock: defaultdict[Client, list[Pizza]] = defaultdict(list)
 
     def _bake(self, pizza: Pizza) -> Pizza:
         """Bake pizza and return it.
@@ -65,17 +64,21 @@ class Restaurant:
             pizza.bake()
         return pizza
 
-    def _add_to_stock(self, client: "Client", item: FoodItem) -> None:
+    def _add_to_stock(self, client: "Client", item: Pizza) -> None:
         """Add baked food to a _stock (list) where key=client who ordered it."""
         self._stock[client].append(item)
 
-    def _retrieve_from_stock(self, client: "Client") -> list[FoodItem]:
+    def _retrieve_from_stock(self, client: "Client") -> list[Pizza]:
         """Take all food from _stock for this client."""
         items = self._stock[client]
         del self._stock[client]
         return items
 
-    def give_food(self, client: "Client") -> list[FoodItem]:
+    def get_stock(self) -> defaultdict["Client", list[Pizza]]:
+        """Get stock of baked food for customers"""
+        return self._stock
+
+    def give_food(self, client: "Client") -> list[Pizza]:
         """Give food to client who wants to pick up by himself."""
         return self._retrieve_from_stock(client)
 
@@ -134,13 +137,17 @@ class Client:
         self.phone_number = phone_number
         self.restaurant = restaurant
         self.is_delivery = is_delivery
-        self._stock: list[FoodItem] = []
+        self._stock: list[Pizza] = []
 
     def __hash__(self):
         """Uniquely identify a client."""
         return hash((self.name, self.phone_number))
 
-    def add_to_stock(self, items: list[FoodItem]) -> None:
+    def get_stock(self) -> list[Pizza]:
+        """Get pizza stock of client"""
+        return self._stock
+
+    def add_to_stock(self, items: list[Pizza]) -> None:
         """Add food items to a client's stock."""
         for item in items:
             self._stock.append(item)
@@ -156,7 +163,7 @@ class Client:
             food = self._pickup()
             self.add_to_stock(food)
 
-    def _pickup(self) -> list[FoodItem]:
+    def _pickup(self) -> list[Pizza]:
         """Pickup all ordered food from a restaurant."""
         return self.restaurant.give_food(self)
 
@@ -167,9 +174,12 @@ if __name__ == "__main__":
     client = Client(restaurant=restaurant, is_delivery=False)
     client.make_order("Pepperoni")
     client.make_order("Pepperoni")
-    print(client._stock)  # noqa
+    print(client.get_stock())
     client = Client(restaurant=restaurant, is_delivery=True)
     client.make_order("Pepperoni")
     client.make_order("Pepperoni")
     print(Restaurant.__mro__)
     print(Restaurant.__wrapped__.__mro__)  # type: ignore
+
+    client = Client(restaurant=restaurant, is_delivery=True)
+    print(vars(client))

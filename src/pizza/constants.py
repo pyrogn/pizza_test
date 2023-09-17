@@ -1,4 +1,5 @@
 """Constants for the project"""
+
 # Latency duration for real ordering pizza
 MIN_LATENCY_MS = 150
 MAX_LATENCY_MS = 3_000
