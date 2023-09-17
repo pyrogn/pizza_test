@@ -72,8 +72,13 @@ class LogTimeDecorator:
         """Decorate provided function"""
 
         @functools.wraps(fn)
-        def log_time(*args: Any, **kwargs: Any) -> tuple[Any, float]:
-            """Execute function with custom parameters"""
+        def log_time(*args: Any, **kwargs: Any) -> tuple[Any, float] | Any:
+            """Execute function with custom parameters
+
+            Returns:
+                result of the function if is_return_time=False
+                tuple (result, float time) if is_return_time=True
+            """
 
             time_start = time.time()
             result = fn(*args, **kwargs)
