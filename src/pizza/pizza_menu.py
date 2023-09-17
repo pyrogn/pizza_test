@@ -5,7 +5,6 @@ Module defines pizza classes and collects them into custom dict
 from collections import UserDict
 from typing import TypeVar
 
-# from abc import ABC, abstractmethod
 from pizza.constants import AVAILABLE_PIZZA_SIZES
 
 

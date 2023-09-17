@@ -44,7 +44,7 @@ class Restaurant:
             where key - Client, value - list of Pizza.
     """
 
-    def __init__(self, menu: "LowerKeyMenu") -> None:
+    def __init__(self, menu: LowerKeyMenu) -> None:
         """Initialization of restaurant with the menu.
 
         menu: available food to clients
@@ -120,9 +120,9 @@ class Client:
         self,
         restaurant: Restaurant,
         *,
+        is_delivery: bool,
         name: str = "Pavel",
         phone_number: str = "+1337",
-        is_delivery: bool,
     ) -> None:
         """Initializes Client with personal info and linked restaurant.
 
