@@ -43,8 +43,8 @@ def test_pizza_order(is_delivery: bool):  # noqa: FBT001
     n_orders = 2
     for _ in range(n_orders):
         client.make_order(first_pizza_name)
-    assert len(client._stock) == n_orders
-    assert len(restaurant._stock) == 0
+    assert len(client.get_stock()) == n_orders
+    assert len(restaurant.get_stock()) == 0
     assert all(pizza.is_baked is True for pizza in client._stock)
 
 
@@ -52,7 +52,6 @@ def test_pizza_order(is_delivery: bool):  # noqa: FBT001
 def test_different_pizza(pizza_class: type[Pizza]):
     """Test that pizzas can be baked and they're pizzas indeed."""
     pizza = pizza_class()
-    assert pizza.type_of_food == "pizza"
     assert pizza.is_baked is False
     pizza.bake()
     assert pizza.is_baked is True
@@ -94,6 +93,6 @@ def test_pizza_order_diff_clients():
     client1.make_order("Pepperoni")
     client2.make_order("Pepperoni")
     assert client1 != client2
-    assert len(restaurant._stock) == 0
-    assert len(client1._stock) == 1
-    assert len(client2._stock) == 1
+    assert len(restaurant.get_stock()) == 0
+    assert len(client1.get_stock()) == 1
+    assert len(client2.get_stock()) == 1

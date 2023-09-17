@@ -5,25 +5,8 @@ Module defines pizza classes and collects them into custom dict
 from collections import UserDict
 from typing import TypeVar
 
+# from abc import ABC, abstractmethod
 from pizza.constants import AVAILABLE_PIZZA_SIZES
-
-
-class FoodItem:
-    """Super class for all food items.
-
-    Attrs:
-        recipe: recipe of this food
-        emoji: emoji, associated with this food
-        type_of_food: general name of this food
-        alt_name: alternative name of food if exists.
-            By default, a class name will be used.
-    """
-
-    recipe: tuple[str, ...]
-    emoji: str
-    type_of_food: str
-    alt_name: str | None = None
-    is_baked: bool = False
 
 
 class classproperty:  # noqa: D101
@@ -34,16 +17,25 @@ class classproperty:  # noqa: D101
         return self.fget(owner)
 
 
-class Pizza(FoodItem):
-    """Specialization of food - pizza.
+class Pizza:
+    """Pizza template that can be cooked and served.
 
     Attributes:
-        is_baked (bool): is pizza baked, or it is a template
+        recipe: recipe of this food
+        emoji: emoji, associated with this food
+        is_baked: is pizza baked, or it is a template
         size: size of pizza (L or XL).
+        alt_name: alternative name of food if exists.
+            By default, a class name will be used.
+    Class attributes:
         name: name of pizza (alt_name or from class name)
+        clean_recipe: recipe as string separated by comma
     """
 
-    type_of_food: str = "pizza"
+    recipe: tuple[str, ...]
+    emoji: str
+    alt_name: str | None = None
+    is_baked: bool = False
 
     def __init__(self, size="L") -> None:
         """Initialize Pizza with size.
@@ -77,14 +69,11 @@ class Pizza(FoodItem):
 
     def __str__(self) -> str:
         """Description of pizza instance."""
-        return (
-            f"{self.__class__.name} {self.type_of_food}, "
-            f"Size: {self.size}, Is baked: {self.is_baked}"
-        )
+        return f"{type(self).name}, " f"Size: {self.size}, Is baked: {self.is_baked}"
 
     def __repr__(self) -> str:
         """Repr of pizza with original parameters. It will not be baked."""
-        return f"{self.__class__.__name__}(size={self.size!r})"
+        return f"{type(self).__name__}(size={self.size!r})"
 
     def __eq__(self, other: "Pizza") -> bool:  # type: ignore
         """Compare pizzas by their characteristics.

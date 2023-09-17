@@ -1,4 +1,5 @@
 """Constants for the project"""
+
 # Latency duration for real ordering pizza
 MIN_LATENCY_MS = 150
 MAX_LATENCY_MS = 3_000
@@ -15,3 +16,8 @@ NUM_ACTIONS_LINES = 2  # bake + deliver/pick up
 
 # Restaurant have these available sizes for all pizzas
 AVAILABLE_PIZZA_SIZES: list[str] = ["L", "XL"]
+
+
+# class AVAILABLE_PIZZA_SIZES(Enum):
+#     L = "L"
+#     XL = "XL"
