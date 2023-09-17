@@ -88,7 +88,9 @@ def test_pizza_order(is_delivery, pizza_class, runner):
     params_cli = (
         ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
     )
-    (exit_code, split_result), execution_time = LogTimeDecorator()(runner)(
+    (exit_code, split_result), execution_time = LogTimeDecorator(
+        is_return_time=True,
+    )(runner)(
         args=params_cli,
     )
 
@@ -144,5 +146,7 @@ def test_latency_exists(pizza_class, is_delivery, runner):
     params_cli = (
         ["order", pizza_name, "--delivery"] if is_delivery else ["order", pizza_name]
     )
-    _, execution_time = LogTimeDecorator()(runner)(args=params_cli)
+    _, execution_time = LogTimeDecorator(is_return_time=True)(runner)(
+        args=params_cli,
+    )
     assert execution_time > TEST_LATENCY_S
