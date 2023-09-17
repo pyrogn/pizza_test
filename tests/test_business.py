@@ -9,6 +9,7 @@ from .help_funcs import all_pizzas_parameters, all_types_delivery
 
 # CONFUSION: I don't know how to persuade linter
 # to believe that they have this attribute
+# To test decorated methods comment these 2 lines!!!
 Restaurant = Restaurant.__wrapped__  # type: ignore
 Client = Client.__wrapped__  # type: ignore
 
@@ -40,12 +41,15 @@ def test_pizza_order(is_delivery: bool):  # noqa: FBT001
     """
     restaurant = Restaurant(pizza_menu)
     client = Client(is_delivery=is_delivery, restaurant=restaurant)
-    n_orders = 2
+    n_orders = 20
     for _ in range(n_orders):
         client.make_order(first_pizza_name)
     assert len(client.get_stock()) == n_orders
     assert len(restaurant.get_stock()) == 0
-    assert all(pizza.is_baked is True for pizza in client._stock)
+    assert all(
+        pizza.is_baked and isinstance(pizza, Pizza) is True
+        for pizza in client.get_stock()
+    )
 
 
 @all_pizzas_parameters
