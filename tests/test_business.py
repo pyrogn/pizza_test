@@ -16,6 +16,8 @@ Client = Client.__wrapped__  # type: ignore
 # To take random first actual values if they don't matter
 first_pizza_name = next(iter(pizza_menu.values())).name
 first_pizza_size = AVAILABLE_PIZZA_SIZES[0]
+unk_pizza = "definitely_unknown_pizza"
+unk_size = "definitely_unknown_size"
 
 
 @all_pizzas_parameters
@@ -69,21 +71,19 @@ def test_unknown_size_pizza(pizza_class: type[Pizza]):
         pizza_class(size=unk_size)
 
 
-def test_pizza_validation():
+@pytest.mark.parametrize(
+    ("pizza_name", "pizza_size", "is_valid"),
+    [
+        (first_pizza_name, first_pizza_size, True),
+        (unk_pizza, first_pizza_size, False),
+        (first_pizza_name, unk_size, False),
+        (unk_pizza, unk_size, False),
+    ],
+)
+def test_pizza_validation(pizza_name, pizza_size, is_valid):
     """Test that validation func don't allow incorrect pizza names and sizes"""
-    known_pizza = first_pizza_name
-    known_size = first_pizza_size
-    unk_pizza = "definitely_unknown_pizza"
-    unk_size = "definitely_unknown_size"
-    test_cases = {
-        (known_pizza, known_size): True,
-        (unk_pizza, known_size): False,
-        (known_pizza, unk_size): False,
-        (unk_pizza, unk_size): False,
-    }
-    for case, result in test_cases.items():
-        flag, _ = validate_pizza(pizza_name=case[0], size=case[1])
-        assert flag is result
+    flag, _ = validate_pizza(pizza_name=pizza_name, size=pizza_size)
+    assert flag is is_valid
 
 
 def test_pizza_order_diff_clients():
